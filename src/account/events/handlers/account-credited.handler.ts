@@ -13,6 +13,6 @@ export class AccountCreditedHandler implements IEventHandler<AccountCreditedEven
 
   handle(event: AccountCreditedEvent) {
     this.logger.log(`AccountCreditedEvent: ${JSON.stringify(event)}`);
-    this.eventStore.saveEvent(event.accountId, event, 'accountAggregate');
+    this.eventStore.saveEvent(event.userId, event.accountId, event, 'accountAggregate');
   }
 }

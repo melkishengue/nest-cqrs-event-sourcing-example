@@ -13,6 +13,6 @@ export class AccountDeletedHandler implements IEventHandler<AccountDeletedEvent>
 
   handle(event: AccountDeletedEvent) {
     this.logger.log(`AccountDeletedEvent: ${JSON.stringify(event)}`);
-    this.eventStore.saveEvent(event.accountId, event, 'accountAggregate');
+    this.eventStore.saveEvent(event.userId, event.accountId, event, 'accountAggregate');
   }
 }

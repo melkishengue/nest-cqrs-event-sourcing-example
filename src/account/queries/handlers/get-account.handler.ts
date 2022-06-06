@@ -7,6 +7,7 @@ export class GetAccountHandler implements IQueryHandler<GetAccountQuery> {
   constructor(private readonly repository: AccountRepository) {}
 
   async execute(query: GetAccountQuery) {
-    return this.repository.findOneById(query.accountId);
+    const { accountId, userId } = query;
+    return this.repository.findOneById(accountId, userId);
   }
 }

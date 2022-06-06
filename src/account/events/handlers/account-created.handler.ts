@@ -13,6 +13,6 @@ export class AccountCreatedHandler implements IEventHandler<AccountCreatedEvent>
 
   handle(event: AccountCreatedEvent) {
     this.logger.log(`AccountCreatedEvent: ${JSON.stringify(event)}`);
-    this.eventStore.saveEvent(event.accountId, event, 'accountAggregate');
+    this.eventStore.saveEvent(event.userId, event.accountId, event, 'accountAggregate');
   }
 }

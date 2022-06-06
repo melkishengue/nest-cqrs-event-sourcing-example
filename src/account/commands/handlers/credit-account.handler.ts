@@ -14,11 +14,12 @@ export class CreditAccountHandler
   protected readonly logger = new Logger(CreditAccountHandler.name);
 
   async execute(command: CreditAccountCommand) {
-    const { accountId, amount, senderId } = command;
-    const replayedAccount = this.repository.findOneById(accountId);
+    const { userId, accountId, amount, senderId } = command;
+    const replayedAccount = this.repository.findOneById(accountId, userId);
     if (!replayedAccount) {
+      // TODO: should generate a compensating event
       this.logger.error(`Account ${accountId} does not exist`);
-      throw new Error('Non existing account');
+      return;
     }
 
     const account = this.publisher.mergeObjectContext(

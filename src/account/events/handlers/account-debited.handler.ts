@@ -13,6 +13,6 @@ export class AccountDebitedHandler implements IEventHandler<AccountDebitedEvent>
 
   handle(event: AccountDebitedEvent) {
     this.logger.log(`AccountDebitedEvent: ${JSON.stringify(event)}`);
-    this.eventStore.saveEvent(event.accountId, event, 'accountAggregate');
+    this.eventStore.saveEvent(event.userId, event.accountId, event, 'accountAggregate');
   }
 }

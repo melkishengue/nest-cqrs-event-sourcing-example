@@ -10,7 +10,7 @@ import { AccountDeletedEvent } from '../events/impl/account-deleted.event';
 const INITIAL_SALDO = 1000;
 
 export class Account extends AggregateRoot {
-  constructor(private readonly id: string) {
+  constructor(private readonly id: string, private readonly userId) {
     super();
   }
 
@@ -18,10 +18,19 @@ export class Account extends AggregateRoot {
   private amount: number = 0;
   private isDeleted: boolean = false;
 
-  createAccount(userId: string) {
-    // TODO: implement domain logic, user should not have more than 2 accounts
+  isAccountActive(): boolean {
+    return !this.isDeleted;
+  }
+
+  createAccount(userAccounts: Account[]) {
+    if (userAccounts && userAccounts.length > 1) {
+      // Business rule: no user should have more than 2 accounts
+      const message = `User ${this.userId} already has ${userAccounts.length} accounts!`;
+      this.logger.error(message);
+      return { message };
+    }
     const accountId: string = (Math.random() + 1).toString(36).substring(7);
-    this.apply(new AccountCreatedEvent(accountId, userId));
+    this.apply(new AccountCreatedEvent(accountId, this.userId));
   }
 
   deleteAccount() {
@@ -30,7 +39,7 @@ export class Account extends AggregateRoot {
       return;
     }
 
-    this.apply(new AccountDeletedEvent(this.id));
+    this.apply(new AccountDeletedEvent(this.userId, this.id));
   }
 
   debitAccount(receiverAccountId: string, amount: number) {
@@ -44,25 +53,25 @@ export class Account extends AggregateRoot {
       return;
     }
 
-    this.apply(new AccountDebitedEvent(this.id, receiverAccountId, amount));
+    this.apply(new AccountDebitedEvent(this.userId, this.id, receiverAccountId, amount));
   }
 
-  creditAccount(senderId: string, amount: number) {
+  creditAccount(senderAccountId: string, amount: number) {
     // transaction fails with 20% probability
     const transactionFailed = Math.random() < 0.2;
     if (transactionFailed) {
       this.logger.error('Fund transfer failed. Transaction needs to be rollbacked');
-      this.apply(new AccountCreditFailedEvent(senderId, this.id , amount));
+      this.apply(new AccountCreditFailedEvent(this.userId, senderAccountId, this.id , amount));
       return;
     }
     
     if (this.isDeleted) {
       this.logger.error(`Account ${this.id} has been deleted`);
-      this.apply(new AccountCreditFailedEvent(senderId, this.id , amount));
+      this.apply(new AccountCreditFailedEvent(this.userId, senderAccountId, this.id , amount));
       return;
     }
 
-    this.apply(new AccountCreditedEvent(this.id, amount));
+    this.apply(new AccountCreditedEvent(this.userId, this.id, amount));
   }
 
   applyEvent(event: DomainEvent): void {

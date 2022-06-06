@@ -13,8 +13,8 @@ export class DebitAccountHandler
   protected readonly logger = new Logger(DebitAccountHandler.name);
 
   async execute(command: DebitAccountCommand) {
-    const { accountId, amount, receiverAccountId } = command;
-    const replayedAccount = this.repository.findOneById(accountId);
+    const { userId, accountId, amount, receiverAccountId } = command;
+    const replayedAccount = this.repository.findOneById(accountId, userId);
 
     if (!replayedAccount) {
       this.logger.error(`Account ${accountId} does not exist`);

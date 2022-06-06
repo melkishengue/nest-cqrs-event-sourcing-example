@@ -9,6 +9,6 @@ export class EventStoreController {
 
   @Get('/:streamId')
   async getEvents(@Param('streamId') streamId: string) {
-    return this.eventStore.getEvents(streamId, 'accountAggregate');
+    return this.eventStore.getEvents(streamId);
   }
 }

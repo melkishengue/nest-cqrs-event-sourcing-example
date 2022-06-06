@@ -3,13 +3,15 @@ import { resolve } from 'path';
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { DomainEvent } from "../../account/events/impl";
 
+export type EnhancedEvent = { rowId: string, aggregateId: string, event: DomainEvent, createdAt: Date, version: number };
+
 @Injectable()
 export class EventStore implements OnModuleInit {
-  streams: Record<string, { events: { event: DomainEvent, createdAt: Date }[] }> = {};
+  streams: EnhancedEvent[] = [];
   
-  protected readonly DB_PATH = resolve(__dirname, 'events.json');
+  protected readonly DB_PATH = resolve('events.json');
   protected readonly logger = new Logger(EventStore.name);
-
+  
   onModuleInit() {
     try {
       const eventsData = readFileSync(this.DB_PATH, 'utf-8');
@@ -22,26 +24,28 @@ export class EventStore implements OnModuleInit {
     setInterval(() => this.flushIntoDatabase(), 3000);
   }
   
-  saveEvent(streamId: string, event: DomainEvent, aggregateName: string): void {
-    const content = { event, createdAt: new Date() };
-    this.logger.log(`Saving event: ${JSON.stringify(content)}`);
-    const _streamId = `${streamId}:${aggregateName}`;
-    const stream = this.streams[_streamId];
-    if (!stream?.events) {
-      this.streams[_streamId] = { events: [content] };
-      return;
-    }
-    
-    stream.events.push(content);
+  saveEvent(rowId: string, aggregateId: string, event: DomainEvent, aggregateName: string): void {
+    const _rowId = `${rowId}:${aggregateName}`;
+    const _event: EnhancedEvent = { rowId: _rowId, aggregateId, event, createdAt: new Date(), version: this.streams.length };
+    this.logger.log(`Saving event: ${JSON.stringify(_event)}`);
+    this.streams.push(_event);
   }
 
-  getEvents(streamId: string, aggregateName: string): DomainEvent[] {
-    const _streamId = `${streamId}:${aggregateName}`;
-    return this.streams?.[_streamId]?.events?.map(e => e.event) || [];
+  getEventsByRowId(rowId: string, aggregateName: string): DomainEvent[] {
+    const _rowId = `${rowId}:${aggregateName}`;
+    return this.streams
+      .filter(e => e.rowId === _rowId)
+      .map(e => e.event);
+  }
+
+  getEvents(aggregateId: string): DomainEvent[] {
+    return this.streams
+      .filter(e => e.aggregateId === aggregateId)
+      .map(e => e.event);
   }
 
   flushIntoDatabase(): void {
     // 🖕 event-loop
-    writeFileSync(this.DB_PATH, JSON.stringify(this.streams));
+    writeFileSync(this.DB_PATH, JSON.stringify(this.streams, null, 4));
   }
 }

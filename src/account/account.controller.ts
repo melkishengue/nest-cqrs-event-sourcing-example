@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateAccountCommand } from './commands/impl/create-account.command';
 import { DebitAccountCommand } from './commands/impl/debit-account.command';
@@ -6,10 +6,20 @@ import { DeleteAccountCommand } from './commands/impl/delete-account.command';
 import { GetAccountQuery } from './queries/impl';
 
 export interface DebitAccountDto {
-  accountId: string, amount: number, receiverAccountId: string
+  userId: string, accountId: string, amount: number, receiverAccountId: string
+}
+
+export interface CreateAccountDto {
+  userId: string
 }
 
 export interface DeleteAccountDto {
+  userId: string,
+  accountId: string
+}
+
+export interface GetAccountDto {
+  userId: string,
   accountId: string
 }
 
@@ -20,25 +30,28 @@ export class AccountController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @Get('/:id')
-  async getAccount(@Param('id') accountId: string) {
-    return this.queryBus.execute(new GetAccountQuery(accountId));
+  @Get('/')
+  async getAccount(@Body() getAccountDto: GetAccountDto) {
+    const { userId, accountId } = getAccountDto;
+    return this.queryBus.execute(new GetAccountQuery(userId, accountId));
   }
 
   @Post('/create')
-  async createAccount(@Param('userId') userId: string) {
-    return this.commandBus.execute(new CreateAccountCommand(userId));
+  async createAccount(@Body() createAccountDto: CreateAccountDto) {
+    return this.commandBus.execute(new CreateAccountCommand(createAccountDto.userId));
   }
 
   @Post('/debit')
   async debitAccount(@Body() debitAccountDto: DebitAccountDto) {
+    const { userId, accountId, receiverAccountId, amount } = debitAccountDto;
     return this.commandBus.execute(
-      new DebitAccountCommand(debitAccountDto.accountId, debitAccountDto.receiverAccountId, debitAccountDto.amount));
+      new DebitAccountCommand(userId, accountId, receiverAccountId, amount));
   }
 
   @Post('/delete')
   async deleteAccount(@Body() deleteAccountDto: DeleteAccountDto) {
+    const { userId, accountId } = deleteAccountDto;
     return this.commandBus.execute(
-      new DeleteAccountCommand(deleteAccountDto.accountId));
+      new DeleteAccountCommand(userId, accountId));
   }
 }

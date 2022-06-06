@@ -13,8 +13,8 @@ export class DeleteAccountHandler
   protected readonly logger = new Logger(DeleteAccountHandler.name);
 
   async execute(command: DeleteAccountCommand) {
-    const { accountId } = command;
-    const replayedAccount = this.repository.findOneById(accountId);
+    const { accountId, userId } = command;
+    const replayedAccount = this.repository.findOneById(accountId, userId);
 
     if (!replayedAccount) {
       this.logger.error(`Account ${accountId} does not exist`);
