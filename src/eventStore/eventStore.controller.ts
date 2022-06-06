@@ -1,9 +1,5 @@
-import { Body, Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { EventStore } from './core/eventStore';
-
-export interface GetEventsDto {
-  id: string
-}
 
 @Controller('events')
 export class EventStoreController {
@@ -11,8 +7,8 @@ export class EventStoreController {
     private readonly eventStore: EventStore,
   ) {}
 
-  @Get('/')
-  async getEvents(@Body() getEventsDto: GetEventsDto) {
-    return this.eventStore.getEvents(getEventsDto.id);
+  @Get('/:streamId')
+  async getEvents(@Param('streamId') streamId: string) {
+    return this.eventStore.getEvents(streamId, 'accountAggregate');
   }
 }

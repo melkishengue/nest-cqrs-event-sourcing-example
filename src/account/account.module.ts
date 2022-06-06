@@ -6,6 +6,7 @@ import { AccountController } from './account.controller';
 import { AccountRepository } from './repository/account.repository';
 import { AccountSagas } from './sagas/account.sagas';
 import { EventStoreModule } from '../eventStore/eventStore.module';
+import { QueryHandlers } from './queries/handlers';
 
 @Module({
   imports: [CqrsModule, EventStoreModule],
@@ -14,6 +15,7 @@ import { EventStoreModule } from '../eventStore/eventStore.module';
     AccountRepository,
     ...CommandHandlers,
     ...EventHandlers,
+    ...QueryHandlers,
     AccountSagas,
   ],
 })

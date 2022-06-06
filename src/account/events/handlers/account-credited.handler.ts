@@ -1,5 +1,5 @@
+import { Logger } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import * as clc from 'cli-color';
 import { EventStore } from '../../../eventStore/core/eventStore';
 import { AccountCreditedEvent } from '../impl/account-Credited.event';
 
@@ -9,8 +9,10 @@ export class AccountCreditedHandler implements IEventHandler<AccountCreditedEven
     private readonly eventStore: EventStore,
   ) {}
 
+  protected readonly logger = new Logger(AccountCreditedHandler.name);
+
   handle(event: AccountCreditedEvent) {
-    console.log(clc.yellowBright(`Async AccountCreditedEvent`), event);
-    this.eventStore.saveEvent(event.accountId, event);
+    this.logger.log(`AccountCreditedEvent: ${JSON.stringify(event)}`);
+    this.eventStore.saveEvent(event.accountId, event, 'accountAggregate');
   }
 }

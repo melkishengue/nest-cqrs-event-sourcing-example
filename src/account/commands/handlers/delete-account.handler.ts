@@ -1,21 +1,21 @@
 import { Logger } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { AccountRepository } from '../../repository/account.repository';
-import { CreditAccountCommand } from '../impl/credit-account.command';
+import { DeleteAccountCommand } from '../impl/delete-account.command';
 
-@CommandHandler(CreditAccountCommand)
-export class CreditAccountHandler
-  implements ICommandHandler<CreditAccountCommand> {
+@CommandHandler(DeleteAccountCommand)
+export class DeleteAccountHandler
+  implements ICommandHandler<DeleteAccountCommand> {
   constructor(
     private readonly repository: AccountRepository,
     private readonly publisher: EventPublisher,
   ) {}
+  protected readonly logger = new Logger(DeleteAccountHandler.name);
 
-  protected readonly logger = new Logger(CreditAccountHandler.name);
-
-  async execute(command: CreditAccountCommand) {
-    const { accountId, amount, senderId } = command;
+  async execute(command: DeleteAccountCommand) {
+    const { accountId } = command;
     const replayedAccount = this.repository.findOneById(accountId);
+
     if (!replayedAccount) {
       this.logger.error(`Account ${accountId} does not exist`);
       throw new Error('Non existing account');
@@ -24,7 +24,7 @@ export class CreditAccountHandler
     const account = this.publisher.mergeObjectContext(
       replayedAccount
     );
-    account.creditAccount(senderId, amount);
+    account.deleteAccount();
     account.commit();
 
     return { message: 'Your request is being processed. You will receive an email in few minutes' };
