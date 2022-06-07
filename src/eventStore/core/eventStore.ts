@@ -26,7 +26,13 @@ export class EventStore implements OnModuleInit {
   
   saveEvent(rowId: string, aggregateId: string, event: DomainEvent, aggregateName: string): void {
     const _rowId = `${rowId}:${aggregateName}`;
-    const _event: EnhancedEvent = { rowId: _rowId, aggregateId, event, createdAt: new Date(), version: this.streams.length };
+    const _event: EnhancedEvent = {
+      rowId: _rowId,
+      aggregateId,
+      event,
+      createdAt: new Date(),
+      version: this.streams.length
+    };
     this.logger.log(`Saving event: ${JSON.stringify(_event)}`);
     this.streams.push(_event);
   }

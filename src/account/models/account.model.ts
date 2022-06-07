@@ -74,27 +74,29 @@ export class Account extends AggregateRoot {
     this.apply(new AccountCreditedEvent(this.userId, this.id, amount));
   }
 
-  applyEvent(event: DomainEvent): void {
-    switch(event.type) {
-      case 'AccountCreatedEvent':
-        this.amount = INITIAL_SALDO;
-        this.isDeleted = false;
-        break;
-      case 'AccountDeletedEvent':
-        this.isDeleted = true;
-        break;
-      case 'AccountDebitedEvent':
-        // TODO: type narrowing needed to detect amount property
-        // @ts-ignore
-        this.amount -= event.amount;
-        break;
-      case 'AccountCreditedEvent':
-        // TODO: type narrowing needed to detect amount property
-        // @ts-ignore
-        this.amount += event.amount;
-        break;
-      default:
-        this.logger.warn(`Unhandled event type: ${event.type}`);
-    }
+  applyEvents(events: DomainEvent[]): void {
+    events.forEach(event => {
+      switch(event.type) {
+        case 'AccountCreatedEvent':
+          this.amount = INITIAL_SALDO;
+          this.isDeleted = false;
+          break;
+        case 'AccountDeletedEvent':
+          this.isDeleted = true;
+          break;
+        case 'AccountDebitedEvent':
+          // TODO: type narrowing needed to detect amount property
+          // @ts-ignore
+          this.amount -= event.amount;
+          break;
+        case 'AccountCreditedEvent':
+          // TODO: type narrowing needed to detect amount property
+          // @ts-ignore
+          this.amount += event.amount;
+          break;
+        default:
+          this.logger.warn(`Unhandled event type: ${event.type}`);
+      }
+    });
   }
 }

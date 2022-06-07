@@ -26,7 +26,7 @@ export class AccountRepository {
 
     this.logger.log(`Found ${events.length} events with streamId ${accountId}`);
     let account = new Account(accountId, userId);
-    events.forEach(event => account.applyEvent(event));
+    account.applyEvents(events);
     return account;
   }
 
@@ -37,7 +37,7 @@ export class AccountRepository {
       .map(accountId => {
         let account = new Account(accountId, userId);
         const events = eventsByAccountIds[accountId];
-        events.forEach(event => account.applyEvent(event));
+        account.applyEvents(events);
         return account;
       })
       .filter(account => account.isAccountActive());
