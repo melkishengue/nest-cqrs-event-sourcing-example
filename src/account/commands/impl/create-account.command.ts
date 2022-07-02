@@ -1,4 +1,4 @@
-import { Currency } from "../../value-objects/money.vo";
+import { Currency } from "../../value-objects/";
 
 export class CreateAccountCommand {
   constructor(

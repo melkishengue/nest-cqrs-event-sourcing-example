@@ -4,7 +4,7 @@ import { CreateAccountCommand } from './commands/impl/create-account.command';
 import { DebitAccountCommand } from './commands/impl/debit-account.command';
 import { DeleteAccountCommand } from './commands/impl/delete-account.command';
 import { GetAccountQuery } from './queries/impl';
-import { Currency, Money } from './value-objects/money.vo';
+import { Currency, Money } from './value-objects/';
 
 export interface DebitAccountDto {
   userId: string,

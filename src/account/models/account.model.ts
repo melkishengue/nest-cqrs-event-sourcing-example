@@ -7,7 +7,7 @@ import { AccountCreditFailedEvent } from '../events/impl/account-credit-failed.e
 import { AccountCreditedEvent } from '../events/impl/account-credited.event';
 import { AccountDebitedEvent } from '../events/impl/account-debited.event';
 import { AccountDeletedEvent } from '../events/impl/account-deleted.event';
-import { Currency, Money } from '../value-objects/money.vo';
+import { Currency, Money } from '../value-objects/';
 
 export class Account extends AggregateRoot {
   constructor(private readonly id: string, private readonly userId) {
