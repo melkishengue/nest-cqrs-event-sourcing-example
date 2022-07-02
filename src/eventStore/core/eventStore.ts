@@ -3,11 +3,11 @@ import { resolve } from 'path';
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { DomainEvent } from "../../account/events/impl";
 
-export type EnhancedEvent = { rowId: string, aggregateId: string, event: DomainEvent, createdAt: Date, version: number };
+export type EnhancedDomainEvent = { rowId: string, aggregateId: string, event: DomainEvent, createdAt: Date, version: number };
 
 @Injectable()
 export class EventStore implements OnModuleInit {
-  streams: EnhancedEvent[] = [];
+  streams: EnhancedDomainEvent[] = [];
   
   protected readonly DB_PATH = resolve('events.json');
   protected readonly logger = new Logger(EventStore.name);
@@ -26,7 +26,7 @@ export class EventStore implements OnModuleInit {
   
   saveEvent(rowId: string, aggregateId: string, event: DomainEvent, aggregateName: string): void {
     const _rowId = `${rowId}:${aggregateName}`;
-    const _event: EnhancedEvent = {
+    const _event: EnhancedDomainEvent = {
       rowId: _rowId,
       aggregateId,
       event,

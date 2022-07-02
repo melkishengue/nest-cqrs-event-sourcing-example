@@ -1,9 +1,11 @@
+import { Money } from "../../value-objects/money.vo";
+
 export class AccountCreditFailedEvent {
   constructor(
     public readonly userId: string,
     public readonly accountId: string,
     public readonly receiverAccountId: string,
-    public readonly amount: number) {}
+    public readonly money: Money) {}
 
-  type = 'AccountCreditFailedEvent';
+  readonly type = 'AccountCreditFailedEvent';
 }

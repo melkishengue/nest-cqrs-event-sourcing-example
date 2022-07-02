@@ -15,13 +15,13 @@ export class CreateAccountHandler
   protected readonly logger = new Logger(CreateAccountHandler.name);
 
   async execute(command: CreateAccountCommand) {
-    const { userId } = command;
+    const { userId, currency } = command;
 
     const replayedAccounts = this.repository.getAllAccounts(userId);
     const account = this.publisher.mergeObjectContext(
       new Account('', userId),
     );
-    account.createAccount(replayedAccounts);
+    account.createAccount(replayedAccounts, currency);
     account.commit();
     
     return { message: 'Your request is being processed. You will receive an email in few minutes' };

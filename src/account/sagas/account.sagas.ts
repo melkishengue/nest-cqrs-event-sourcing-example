@@ -18,7 +18,7 @@ export class AccountSagas {
         delay(1000),
         map(event => {
           this.logger.warn('Crediting receiving account');
-          return new CreditAccountCommand(event.userId, event.receiverAccountId, event.accountId, event.amount);
+          return new CreditAccountCommand(event.userId, event.receiverAccountId, event.accountId, event.money);
         }),
       );
   }
@@ -31,7 +31,7 @@ export class AccountSagas {
       delay(1000),
       map(event => {
         this.logger.warn('Compensating sender account after failed transaction');
-        return new CreditAccountCommand(event.userId, event.accountId, event.receiverAccountId, event.amount);
+        return new CreditAccountCommand(event.userId, event.accountId, event.receiverAccountId, event.money);
       }),
     );
   }

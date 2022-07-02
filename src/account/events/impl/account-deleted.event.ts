@@ -4,5 +4,5 @@ export class AccountDeletedEvent {
     public readonly accountId: string,
   ){}
 
-  type = 'AccountDeletedEvent';
+  readonly type = 'AccountDeletedEvent';
 }

@@ -4,13 +4,19 @@ import { CreateAccountCommand } from './commands/impl/create-account.command';
 import { DebitAccountCommand } from './commands/impl/debit-account.command';
 import { DeleteAccountCommand } from './commands/impl/delete-account.command';
 import { GetAccountQuery } from './queries/impl';
+import { Currency, Money } from './value-objects/money.vo';
 
 export interface DebitAccountDto {
-  userId: string, accountId: string, amount: number, receiverAccountId: string
+  userId: string,
+  accountId: string,
+  amount: number,
+  currency: Currency,
+  receiverAccountId: string
 }
 
 export interface CreateAccountDto {
-  userId: string
+  userId: string,
+  currency: Currency
 }
 
 export interface DeleteAccountDto {
@@ -38,14 +44,15 @@ export class AccountController {
 
   @Post('/create')
   async createAccount(@Body() createAccountDto: CreateAccountDto) {
-    return this.commandBus.execute(new CreateAccountCommand(createAccountDto.userId));
+    return this.commandBus.execute(new CreateAccountCommand(createAccountDto.userId, createAccountDto.currency));
   }
 
   @Post('/debit')
   async debitAccount(@Body() debitAccountDto: DebitAccountDto) {
-    const { userId, accountId, receiverAccountId, amount } = debitAccountDto;
+    const { userId, accountId, receiverAccountId, amount, currency } = debitAccountDto;
     return this.commandBus.execute(
-      new DebitAccountCommand(userId, accountId, receiverAccountId, amount));
+      new DebitAccountCommand(
+        userId, accountId, receiverAccountId, new Money(amount, currency)));
   }
 
   @Post('/delete')

@@ -13,7 +13,7 @@ export class DebitAccountHandler
   protected readonly logger = new Logger(DebitAccountHandler.name);
 
   async execute(command: DebitAccountCommand) {
-    const { userId, accountId, amount, receiverAccountId } = command;
+    const { userId, accountId, money, receiverAccountId } = command;
     const replayedAccount = this.repository.findOneById(accountId, userId);
 
     if (!replayedAccount) {
@@ -24,7 +24,7 @@ export class DebitAccountHandler
     const account = this.publisher.mergeObjectContext(
       replayedAccount
     );
-    account.debitAccount(receiverAccountId, amount);
+    account.debitAccount(receiverAccountId, money);
     account.commit();
 
     return { message: 'Your request is being processed. You will receive an email in few minutes' };

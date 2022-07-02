@@ -14,7 +14,7 @@ export class CreditAccountHandler
   protected readonly logger = new Logger(CreditAccountHandler.name);
 
   async execute(command: CreditAccountCommand) {
-    const { userId, accountId, amount, senderId } = command;
+    const { userId, accountId, money, senderId } = command;
     const replayedAccount = this.repository.findOneById(accountId, userId);
     if (!replayedAccount) {
       // TODO: should generate a compensating event
@@ -25,7 +25,7 @@ export class CreditAccountHandler
     const account = this.publisher.mergeObjectContext(
       replayedAccount
     );
-    account.creditAccount(senderId, amount);
+    account.creditAccount(senderId, money);
     account.commit();
 
     return { message: 'Your request is being processed. You will receive an email in few minutes' };

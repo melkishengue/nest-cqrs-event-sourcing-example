@@ -1,3 +1,9 @@
+import { Money } from "../../value-objects/money.vo";
+
 export class DebitAccountCommand {
-  constructor(public readonly userId: string, public readonly accountId: string, public readonly receiverAccountId: string, public readonly amount: number) {}
+  constructor(
+    public userId: string,
+    public accountId: string,
+    public receiverAccountId: string,
+    public money: Money) {}
 }
