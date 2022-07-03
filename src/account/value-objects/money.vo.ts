@@ -26,14 +26,13 @@ export class Money {
   }
   
   decreaseAmount(deltaMoney: Money) {
-    let convertedMoney = Money.convertToCurrency(deltaMoney, this.currency);
-    const newAmount = this.amount - convertedMoney.getAmount();
-
-    if (newAmount < 0) {
+    if (!this.canBeDecreasedOf(deltaMoney)) {
       throw new Error('There is not such a thing as negative money');
     }
 
-    this.amount = newAmount;
+    let convertedMoney = Money.convertToCurrency(deltaMoney, this.currency);
+
+    this.amount = this.amount - convertedMoney.getAmount();
   }
 
   static convertToCurrency(money: Money, currency: Currency): Money {

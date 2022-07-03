@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Post, UseFilters } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseFilters } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateAccountCommand } from './commands/impl/create-account.command';
 import { UpdateAccountCommand } from './commands/impl/update-account.command';
 import { DebitAccountCommand } from './commands/impl/debit-account.command';
 import { DeleteAccountCommand } from './commands/impl/delete-account.command';
-import { GetAccountQuery } from './queries/impl';
+import { GetAccountQuery, GetUserQuery } from './queries/impl';
 import { Currency, Money } from './value-objects/';
 import { HttpExceptionFilter } from './filters';
 
@@ -35,8 +35,12 @@ export interface GetAccountDto {
   accountId: string
 }
 
+export interface GetUserDto {
+  userId: string,
+}
+
 @UseFilters(new HttpExceptionFilter())
-@Controller('account')
+@Controller('accounts')
 export class AccountController {
   constructor(
     private readonly commandBus: CommandBus,
@@ -73,5 +77,18 @@ export class AccountController {
     const { userId, accountId } = deleteAccountDto;
     return this.commandBus.execute(
       new DeleteAccountCommand(userId, accountId));
+  }
+}
+
+@UseFilters(new HttpExceptionFilter())
+@Controller('users')
+export class UserController {
+  constructor(
+    private readonly queryBus: QueryBus,
+  ) {}
+
+  @Get('/:userId')
+  async getUser(@Param('userId') userId: string) {
+    return this.queryBus.execute(new GetUserQuery(userId));
   }
 }

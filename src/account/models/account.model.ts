@@ -1,3 +1,4 @@
+import { v4 as uuid } from 'uuid';
 import { BadRequestException, ForbiddenException, Logger, MethodNotAllowedException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer'
 import { AggregateRoot } from '@nestjs/cqrs';
@@ -14,6 +15,8 @@ export class Account extends AggregateRoot {
   private isDeleted: boolean = false;
   private INITIAL_SALDO = 1000;
   private money: Money;
+  private lastUpdatedAt: string;
+  private creationDate: string;
 
   isAccountActive(): boolean {
     return !this.isDeleted;
@@ -26,8 +29,8 @@ export class Account extends AggregateRoot {
       throw new ForbiddenException(message);
     }
 
-    const accountId: string = (Math.random() + 1).toString(36).substring(7);
-    this.apply(new AccountCreatedEvent(accountId, this.userId, currency));
+    const accountId = uuid();
+    this.apply(new AccountCreatedEvent(accountId, this.userId, currency, (new Date()).toISOString()));
   }
 
   updateAccount(accountId: string, userId: string, currency?: Currency) {
@@ -35,7 +38,7 @@ export class Account extends AggregateRoot {
       throw new BadRequestException(`Unknown currency ${currency}`);
     }
 
-    this.apply(new AccountUpdatedEvent(this.userId, this.id, currency));
+    this.apply(new AccountUpdatedEvent(this.userId, this.id, currency, (new Date()).toISOString()));
   }
 
   deleteAccount() {
@@ -43,7 +46,7 @@ export class Account extends AggregateRoot {
       throw new BadRequestException(`Account ${this.id} has been deleted`);
     }
 
-    this.apply(new AccountDeletedEvent(this.userId, this.id));
+    this.apply(new AccountDeletedEvent(this.userId, this.id, (new Date()).toISOString()));
   }
 
   debitAccount(receiverAccountId: string, money: Money) {
@@ -55,7 +58,7 @@ export class Account extends AggregateRoot {
       throw new MethodNotAllowedException(`Account ${this.id} has been deleted`);
     }
 
-    this.apply(new AccountDebitedEvent(this.userId, this.id, receiverAccountId, money));
+    this.apply(new AccountDebitedEvent(this.userId, this.id, receiverAccountId, money, (new Date()).toISOString()));
   }
 
   creditAccount(senderAccountId: string, money: Money) {
@@ -63,17 +66,17 @@ export class Account extends AggregateRoot {
     const transactionFailed = Math.random() < 0.2;
     if (transactionFailed) {
       this.logger.error('Fund transfer failed. Transaction needs to be rollbacked');
-      this.apply(new AccountCreditFailedEvent(this.userId, senderAccountId, this.id , money));
+      this.apply(new AccountCreditFailedEvent(this.userId, senderAccountId, this.id , money, (new Date()).toISOString()));
       return;
     }
     
     if (this.isDeleted) {
       this.logger.error(`Account ${this.id} has been deleted`);
-      this.apply(new AccountCreditFailedEvent(this.userId, senderAccountId, this.id , money));
+      this.apply(new AccountCreditFailedEvent(this.userId, senderAccountId, this.id , money, (new Date()).toISOString()));
       return;
     }
 
-    this.apply(new AccountCreditedEvent(this.userId, this.id, money));
+    this.apply(new AccountCreditedEvent(this.userId, this.id, money, (new Date()).toISOString()));
   }
 
   applyEvents(events: DomainEvent[]): void {
@@ -84,6 +87,7 @@ export class Account extends AggregateRoot {
         case 'AccountCreatedEvent':
           this.money = new Money(this.INITIAL_SALDO, event.currency);
           this.isDeleted = false;
+          this.creationDate = event.creationDate;
           break;
         case 'AccountUpdatedEvent':
           this.money = Money.convertToCurrency(this.money, event.currency);
@@ -102,6 +106,8 @@ export class Account extends AggregateRoot {
         default:
           this.logger.warn(`Unhandled event type: ${type}`);
       }
+
+      this.lastUpdatedAt = event.creationDate;
     });
   }
 }
