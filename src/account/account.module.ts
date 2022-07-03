@@ -7,6 +7,7 @@ import { AccountRepository } from './repository/account.repository';
 import { AccountSagas } from './sagas/account.sagas';
 import { EventStoreModule } from '../eventStore/eventStore.module';
 import { QueryHandlers } from './queries/handlers';
+import { filters } from './filters';
 
 @Module({
   imports: [CqrsModule, EventStoreModule],
@@ -17,6 +18,7 @@ import { QueryHandlers } from './queries/handlers';
     ...EventHandlers,
     ...QueryHandlers,
     AccountSagas,
+    ...filters
   ],
 })
 export class AccountModule {}

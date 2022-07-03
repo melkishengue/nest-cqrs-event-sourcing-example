@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseFilters } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateAccountCommand } from './commands/impl/create-account.command';
+import { UpdateAccountCommand } from './commands/impl/update-account.command';
 import { DebitAccountCommand } from './commands/impl/debit-account.command';
 import { DeleteAccountCommand } from './commands/impl/delete-account.command';
 import { GetAccountQuery } from './queries/impl';
 import { Currency, Money } from './value-objects/';
+import { HttpExceptionFilter } from './filters';
 
 export interface DebitAccountDto {
   userId: string,
@@ -19,6 +21,10 @@ export interface CreateAccountDto {
   currency: Currency
 }
 
+export type UpdateAccountDto = Partial<CreateAccountDto & {
+  accountId: string
+}>
+
 export interface DeleteAccountDto {
   userId: string,
   accountId: string
@@ -29,6 +35,7 @@ export interface GetAccountDto {
   accountId: string
 }
 
+@UseFilters(new HttpExceptionFilter())
 @Controller('account')
 export class AccountController {
   constructor(
@@ -45,6 +52,12 @@ export class AccountController {
   @Post('/create')
   async createAccount(@Body() createAccountDto: CreateAccountDto) {
     return this.commandBus.execute(new CreateAccountCommand(createAccountDto.userId, createAccountDto.currency));
+  }
+
+  @Post('/update')
+  async updateAccount(@Body() updateAccountDto: UpdateAccountDto) {
+    const { accountId, userId, currency } = updateAccountDto;
+    return this.commandBus.execute(new UpdateAccountCommand(accountId, userId, currency));
   }
 
   @Post('/debit')

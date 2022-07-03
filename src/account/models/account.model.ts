@@ -1,13 +1,9 @@
-import { Logger } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Logger, MethodNotAllowedException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer'
 import { AggregateRoot } from '@nestjs/cqrs';
-import { DomainEvent } from '../events/impl';
-import { AccountCreatedEvent } from '../events/impl/account-created.event';
-import { AccountCreditFailedEvent } from '../events/impl/account-credit-failed.event';
-import { AccountCreditedEvent } from '../events/impl/account-credited.event';
-import { AccountDebitedEvent } from '../events/impl/account-debited.event';
-import { AccountDeletedEvent } from '../events/impl/account-deleted.event';
+import { AccountCreatedEvent, AccountCreditedEvent, AccountCreditFailedEvent, AccountDebitedEvent, DomainEvent } from '../events/impl';
 import { Currency, Money } from '../value-objects/';
+import { AccountUpdatedEvent, AccountDeletedEvent } from '../events/impl/';
 
 export class Account extends AggregateRoot {
   constructor(private readonly id: string, private readonly userId) {
@@ -24,20 +20,27 @@ export class Account extends AggregateRoot {
   }
 
   createAccount(userAccounts: Account[], currency: Currency) {
-    if (userAccounts && userAccounts.length > 1) {
-      // Business rule: no user should have more than 2 accounts
+    if (userAccounts && userAccounts.length >= 2) {
+      // Business rule: no user should have more than 4 accounts
       const message = `User ${this.userId} already has ${userAccounts.length} accounts!`;
-      this.logger.error(message);
-      return { message };
+      throw new ForbiddenException(message);
     }
+
     const accountId: string = (Math.random() + 1).toString(36).substring(7);
     this.apply(new AccountCreatedEvent(accountId, this.userId, currency));
   }
 
+  updateAccount(accountId: string, userId: string, currency?: Currency) {
+    if (!(currency && Object.values(Currency).includes(currency))) {
+      throw new BadRequestException(`Unknown currency ${currency}`);
+    }
+
+    this.apply(new AccountUpdatedEvent(this.userId, this.id, currency));
+  }
+
   deleteAccount() {
     if (this.isDeleted) {
-      this.logger.error(`Account ${this.id} has been deleted`);
-      return;
+      throw new BadRequestException(`Account ${this.id} has been deleted`);
     }
 
     this.apply(new AccountDeletedEvent(this.userId, this.id));
@@ -45,13 +48,11 @@ export class Account extends AggregateRoot {
 
   debitAccount(receiverAccountId: string, money: Money) {
     if (!this.money.canBeDecreasedOf(money)) {
-      this.logger.error('Your credit is not enough to perform this operation');
-      return;
+      throw new MethodNotAllowedException('Your credit is not enough to perform this operation');
     }
 
     if (this.isDeleted) {
-      this.logger.error(`Account ${this.id} has been deleted`);
-      return;
+      throw new MethodNotAllowedException(`Account ${this.id} has been deleted`);
     }
 
     this.apply(new AccountDebitedEvent(this.userId, this.id, receiverAccountId, money));
@@ -83,6 +84,9 @@ export class Account extends AggregateRoot {
         case 'AccountCreatedEvent':
           this.money = new Money(this.INITIAL_SALDO, event.currency);
           this.isDeleted = false;
+          break;
+        case 'AccountUpdatedEvent':
+          this.money = Money.convertToCurrency(this.money, event.currency);
           break;
         case 'AccountDeletedEvent':
           this.isDeleted = true;

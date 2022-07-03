@@ -14,19 +14,19 @@ export class Money {
   }
 
   canBeDecreasedOf(deltaMoney: Money): boolean {
-    let convertedMoney = this.convertToCurrentCurrency(deltaMoney);
+    let convertedMoney = Money.convertToCurrency(deltaMoney, this.currency);
     const newAmount = this.amount - convertedMoney.getAmount();
 
     return newAmount >= 0;
   }
 
   increaseAmount(deltaMoney: Money) {
-    let convertedMoney = this.convertToCurrentCurrency(deltaMoney);
+    let convertedMoney = Money.convertToCurrency(deltaMoney, this.currency);
     this.amount += convertedMoney.getAmount();
   }
   
   decreaseAmount(deltaMoney: Money) {
-    let convertedMoney: Money = this.convertToCurrentCurrency(deltaMoney);
+    let convertedMoney = Money.convertToCurrency(deltaMoney, this.currency);
     const newAmount = this.amount - convertedMoney.getAmount();
 
     if (newAmount < 0) {
@@ -36,21 +36,21 @@ export class Money {
     this.amount = newAmount;
   }
 
-  private convertToCurrentCurrency(money: Money): Money {
-    if (money.getCurrency() === this.currency) {
+  static convertToCurrency(money: Money, currency: Currency): Money {
+    if (money.getCurrency() === currency) {
       return new Money(money.getAmount(), money.getCurrency());
     }
 
     let convertedMoney: Money;
-    if (this.currency === Currency.Dollar) {
+    if (currency === Currency.Dollar) {
       convertedMoney = money.toDollar();
     }
 
-    if (this.currency === Currency.Fcfa) {
+    if (currency === Currency.Fcfa) {
       convertedMoney = money.toFcfa();
     }
 
-    if (this.currency === Currency.Euro) {
+    if (currency === Currency.Euro) {
       convertedMoney = money.toEuro();
     }
 
