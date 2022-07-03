@@ -14,7 +14,7 @@ $ npm install
 $ npm run start
 ```
 
-## Making request
+## Making requests
 Testing: use the following curl request to test the app or import the provided post file into postman.
 
 ### Create an account:
@@ -92,3 +92,8 @@ curl --location --request POST 'localhost:3000/accounts/delete' \
     "accountId": "f09221aa-faa4-11ec-b939-0242ac120002"
 }'
 ```
+
+The postman file `Bank.postman_collection.json` also contains all requests.
+
+The generated events are saved into the events.json file. This is for demonstration purposes only.
+A better option suitable for a production environment would be [Eventstore DB](https://www.eventstore.com/).
