@@ -80,6 +80,7 @@ export class AccountController {
   }
 }
 
+// should normally belong to a seperate module
 @UseFilters(new HttpExceptionFilter())
 @Controller('users')
 export class UserController {

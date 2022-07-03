@@ -20,9 +20,9 @@ export class Money {
     return newAmount >= 0;
   }
 
-  increaseAmount(deltaMoney: Money) {
+  increaseAmount(deltaMoney: Money): Money {
     let convertedMoney = Money.convertToCurrency(deltaMoney, this.currency);
-    this.amount += convertedMoney.getAmount();
+    return new Money(this.amount + convertedMoney.getAmount(), this.currency)
   }
   
   decreaseAmount(deltaMoney: Money) {
@@ -32,7 +32,7 @@ export class Money {
 
     let convertedMoney = Money.convertToCurrency(deltaMoney, this.currency);
 
-    this.amount = this.amount - convertedMoney.getAmount();
+    return new Money(this.amount - convertedMoney.getAmount(), this.currency)
   }
 
   static convertToCurrency(money: Money, currency: Currency): Money {

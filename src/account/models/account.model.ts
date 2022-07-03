@@ -16,7 +16,7 @@ export class Account extends AggregateRoot {
   private INITIAL_SALDO = 1000;
   private money: Money;
   private lastUpdatedAt: string;
-  private creationDate: string;
+  private createdAt: string;
 
   isAccountActive(): boolean {
     return !this.isDeleted;
@@ -87,7 +87,7 @@ export class Account extends AggregateRoot {
         case 'AccountCreatedEvent':
           this.money = new Money(this.INITIAL_SALDO, event.currency);
           this.isDeleted = false;
-          this.creationDate = event.creationDate;
+          this.createdAt = event.creationDate;
           break;
         case 'AccountUpdatedEvent':
           this.money = Money.convertToCurrency(this.money, event.currency);
@@ -97,11 +97,11 @@ export class Account extends AggregateRoot {
           break;
         case 'AccountDebitedEvent':
           savedMoney = plainToInstance(Money, event.money);
-          this.money.decreaseAmount(savedMoney);
+          this.money = this.money.decreaseAmount(savedMoney);
           break;
         case 'AccountCreditedEvent':
           savedMoney = plainToInstance(Money, event.money);
-          this.money.increaseAmount(savedMoney);
+          this.money = this.money.increaseAmount(savedMoney);
           break;
         default:
           this.logger.warn(`Unhandled event type: ${type}`);

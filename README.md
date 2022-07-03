@@ -50,7 +50,7 @@ Response:
                 "amount": 1000,
                 "currency": "USD"
             },
-            "creationDate": "2022-07-03T08:09:48.741Z",
+            "createdAt": "2022-07-03T08:09:48.741Z",
             "lastUpdatedAt": "2022-07-03T08:09:48.741Z"
         }
     ]
