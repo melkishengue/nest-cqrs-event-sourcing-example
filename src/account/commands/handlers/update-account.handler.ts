@@ -14,19 +14,20 @@ export class UpdateAccountHandler
   protected readonly logger = new Logger(UpdateAccountHandler.name);
 
   async execute(command: UpdateAccountCommand) {
-    const { userId, accountId, currency } = command;
+    const { userId, accountId, currency, balance } = command;
     const replayedAccount = this.repository.findOneById(accountId, userId);
     if (!replayedAccount) {
-      this.logger.error(`Account ${accountId} does not exist`);
-      return { message: 'Account not found.' };
+      const message = `Account ${accountId} does not exist`;
+      this.logger.error(message);
+      return { message };
     }
 
     const account = this.publisher.mergeObjectContext(
       replayedAccount
     );
-    account.updateAccount(accountId, userId, currency);
+    account.updateAccount(accountId, userId, currency, balance);
     account.commit();
     
-    return { message: 'Your request is being processed. You will receive an email in few minutes' };
+    return account;
   }
 }

@@ -28,6 +28,6 @@ export class CreditAccountHandler
     account.creditAccount(senderId, money);
     account.commit();
 
-    return { message: 'Your request is being processed. You will receive an email in few minutes' };
+    return account;
   }
 }

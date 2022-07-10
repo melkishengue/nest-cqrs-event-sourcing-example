@@ -2,18 +2,23 @@ import { v4 as uuid } from 'uuid';
 import { BadRequestException, ForbiddenException, Logger, MethodNotAllowedException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer'
 import { AggregateRoot } from '@nestjs/cqrs';
-import { AccountCreatedEvent, AccountCreditedEvent, AccountCreditFailedEvent, AccountDebitedEvent, DomainEvent } from '../events/impl';
+import {
+  AccountCreatedEvent,
+  AccountCreditedEvent,
+  AccountCreditFailedEvent, 
+  AccountDebitedEvent
+} from '../events/impl';
 import { Currency, Money } from '../value-objects/';
 import { AccountUpdatedEvent, AccountDeletedEvent } from '../events/impl/';
+import { AccountAggregateRoot } from './accountAggregateRoot';
 
-export class Account extends AggregateRoot {
-  constructor(private readonly id: string, private readonly userId) {
+export class Account extends AccountAggregateRoot {
+  constructor(private id: string, private userId: string) {
     super();
   }
 
   protected readonly logger = new Logger(Account.name);
   private isDeleted: boolean = false;
-  private INITIAL_SALDO = 1000;
   private money: Money;
   private lastUpdatedAt: string;
   private createdAt: string;
@@ -22,23 +27,31 @@ export class Account extends AggregateRoot {
     return !this.isDeleted;
   }
 
-  createAccount(userAccounts: Account[], currency: Currency) {
+  createAccount(userAccounts: Account[], currency: Currency, balance: Money) {
     if (userAccounts && userAccounts.length >= 2) {
-      // Business rule: no user should have more than 4 accounts
-      const message = `User ${this.userId} already has ${userAccounts.length} accounts!`;
-      throw new ForbiddenException(message);
+      // Business rule: no user should have more than 2 accounts
+      throw new ForbiddenException(`User ${this.userId} already has ${userAccounts.length} accounts!`);
     }
 
     const accountId = uuid();
-    this.apply(new AccountCreatedEvent(accountId, this.userId, currency, (new Date()).toISOString()));
+    this.apply(new AccountCreatedEvent(
+      accountId,
+      this.userId,
+      currency,
+      balance,
+      (new Date()).toISOString()));
   }
 
-  updateAccount(accountId: string, userId: string, currency?: Currency) {
+  updateAccount(accountId: string, userId: string, currency?: Currency, balance?: Money) {
     if (!(currency && Object.values(Currency).includes(currency))) {
       throw new BadRequestException(`Unknown currency ${currency}`);
     }
 
-    this.apply(new AccountUpdatedEvent(this.userId, this.id, currency, (new Date()).toISOString()));
+    if (balance && balance.getAmount() < 0) {
+      throw new BadRequestException(`Cannot set balance to negative value`);
+    }
+
+    this.apply(new AccountUpdatedEvent(this.userId, this.id, currency, balance, (new Date()).toISOString()));
   }
 
   deleteAccount() {
@@ -79,35 +92,40 @@ export class Account extends AggregateRoot {
     this.apply(new AccountCreditedEvent(this.userId, this.id, money, (new Date()).toISOString()));
   }
 
-  applyEvents(events: DomainEvent[]): void {
-    let savedMoney: Money;
-    events.forEach(event => {
-      const type = event.type;
-      switch(type) {
-        case 'AccountCreatedEvent':
-          this.money = new Money(this.INITIAL_SALDO, event.currency);
-          this.isDeleted = false;
-          this.createdAt = event.creationDate;
-          break;
-        case 'AccountUpdatedEvent':
-          this.money = Money.convertToCurrency(this.money, event.currency);
-          break;
-        case 'AccountDeletedEvent':
-          this.isDeleted = true;
-          break;
-        case 'AccountDebitedEvent':
-          savedMoney = plainToInstance(Money, event.money);
-          this.money = this.money.decreaseAmount(savedMoney);
-          break;
-        case 'AccountCreditedEvent':
-          savedMoney = plainToInstance(Money, event.money);
-          this.money = this.money.increaseAmount(savedMoney);
-          break;
-        default:
-          this.logger.warn(`Unhandled event type: ${type}`);
-      }
+  onAccountCreatedEvent(event: AccountCreatedEvent): void {
+    this.id = event.accountId;
+    this.money = plainToInstance(Money, event.balance);
+    this.isDeleted = false;
+    this.createdAt = event.creationDate;
+    this.lastUpdatedAt = event.creationDate;
+  }
 
-      this.lastUpdatedAt = event.creationDate;
-    });
+  onAccountUpdatedEvent(event: AccountUpdatedEvent): void {
+    if (event.currency) {
+      this.money = Money.convertToCurrency(this.money, event.currency);
+    }
+
+    if (event.balance) {
+      this.money = plainToInstance(Money, event.balance);
+    }
+
+    this.lastUpdatedAt = event.creationDate;
+  }
+
+  onAccountDeletedEvent(event: AccountDeletedEvent): void {
+    this.isDeleted = true;
+    this.lastUpdatedAt = event.creationDate;
+  }
+
+  onAccountDebitedEvent(event: AccountDebitedEvent): void {
+    const savedMoney = plainToInstance(Money, event.money);
+    this.money = this.money.decreaseAmount(savedMoney);
+    this.lastUpdatedAt = event.creationDate;
+  }
+
+  onAccountCreditedEvent(event: AccountCreditedEvent): void {
+    const savedMoney = plainToInstance(Money, event.money);
+    this.money = this.money.increaseAmount(savedMoney);
+    this.lastUpdatedAt = event.creationDate;
   }
 }

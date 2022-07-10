@@ -1,8 +1,8 @@
-import { Currency } from "../../value-objects/";
+import { Currency, Money } from "../../value-objects/";
 
 export class CreateAccountCommand {
   constructor(
     public readonly userId: string,
-    public readonly currency: Currency,
+    public readonly balance: Money,
   ) {}
 }

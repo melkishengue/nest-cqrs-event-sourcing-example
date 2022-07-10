@@ -3,7 +3,11 @@ export enum Currency {
 }
 
 export class Money {
-  constructor(private amount: number, private currency: Currency) {}
+  constructor(private readonly amount: number, private readonly currency: Currency) {
+    if (amount < 0) {
+      throw new Error(`Tried to create negative money: ${amount}`);
+    }
+  }
 
   getAmount(): number {
     return this.amount;
@@ -22,41 +26,41 @@ export class Money {
 
   increaseAmount(deltaMoney: Money): Money {
     let convertedMoney = Money.convertToCurrency(deltaMoney, this.currency);
-    return new Money(this.amount + convertedMoney.getAmount(), this.currency)
+    return new Money(this.amount + convertedMoney.getAmount(), this.currency);
   }
   
-  decreaseAmount(deltaMoney: Money) {
+  decreaseAmount(deltaMoney: Money): Money {
     if (!this.canBeDecreasedOf(deltaMoney)) {
       throw new Error('There is not such a thing as negative money');
     }
 
     let convertedMoney = Money.convertToCurrency(deltaMoney, this.currency);
 
-    return new Money(this.amount - convertedMoney.getAmount(), this.currency)
+    return new Money(this.amount - convertedMoney.getAmount(), this.currency);
   }
 
-  static convertToCurrency(money: Money, currency: Currency): Money {
-    if (money.getCurrency() === currency) {
+  static convertToCurrency(money: Money, destinationCurrency: Currency): Money {
+    if (money.getCurrency() === destinationCurrency) {
       return new Money(money.getAmount(), money.getCurrency());
     }
 
     let convertedMoney: Money;
-    if (currency === Currency.Dollar) {
+    if (destinationCurrency === Currency.Dollar) {
       convertedMoney = money.toDollar();
     }
 
-    if (currency === Currency.Fcfa) {
+    if (destinationCurrency === Currency.Fcfa) {
       convertedMoney = money.toFcfa();
     }
 
-    if (currency === Currency.Euro) {
+    if (destinationCurrency === Currency.Euro) {
       convertedMoney = money.toEuro();
     }
 
     return convertedMoney;
   }
 
-  toFcfa() {
+  toFcfa(): Money {
     const convertionTable = {
       [Currency.Fcfa]: 1,
       [Currency.Euro]: 650,
@@ -71,7 +75,7 @@ export class Money {
     return new Money(this.amount*rate, Currency.Fcfa);
   }
 
-  toEuro() {
+  toEuro(): Money {
     const convertionTable = {
       [Currency.Euro]: 1,
       [Currency.Fcfa]: 1/650,
@@ -86,12 +90,12 @@ export class Money {
     return new Money(this.amount*rate, Currency.Euro);
   }
 
-  toDollar() {
+  toDollar(): Money {
     const convertionTable = {
       [Currency.Euro]: 1.04,
       [Currency.Fcfa]: 1/500,
       [Currency.Dollar]: 1
-    }
+    };
     let rate = convertionTable[this.currency];
 
     if (!rate) {

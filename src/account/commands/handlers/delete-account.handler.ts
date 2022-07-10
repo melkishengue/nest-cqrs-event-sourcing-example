@@ -27,6 +27,6 @@ export class DeleteAccountHandler
     account.deleteAccount();
     account.commit();
 
-    return { message: 'Your request is being processed. You will receive an email in few minutes' };
+    return account;
   }
 }
