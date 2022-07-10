@@ -11,13 +11,12 @@ export interface DebitAccountDto {
 
 export interface CreateAccountDto {
   userId: string,
-  currency: Currency,
   balance?: {
     amount: number, currency: Currency
   },
 }
 
-export type UpdateAccountDto = Partial<CreateAccountDto>
+export type UpdateAccountDto = Partial<CreateAccountDto & { currency?: Currency, }>
 
 export interface DeleteAccountDto {
   userId: string,

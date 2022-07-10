@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"currency\": \"{{currency}}\"\n}",
+					"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"currency\": \"{{currency}}\",\n    \"balance\": {\n        \"currency\": \"EUR\",\n        \"amount\": 400\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -20,14 +20,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/accounts/create",
+					"raw": "localhost:3000/accounts/",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"accounts",
-						"create"
+						""
 					]
 				}
 			},
@@ -71,7 +71,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"accountId\": \"{{accountId}}\",\n    \"receiverAccountId\": \"{{accountId2}}\",\n    \"amount\": 100,\n    \"currency\": \"EUR\"\n}",
+					"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"accountId\": \"{{accountId}}\",\n    \"receiverAccountId\": \"{{accountId2}}\",\n    \"money\": {\n        \"amount\": 60000,\n        \"currency\": \"XAF\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -79,13 +79,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/accounts/debit",
+					"raw": "localhost:3000/accounts/{{accountId}}/debit",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"accounts",
+						"{{accountId}}",
 						"debit"
 					]
 				}
@@ -95,11 +96,11 @@
 		{
 			"name": "Update account",
 			"request": {
-				"method": "POST",
+				"method": "PATCH",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"accountId\": \"{{accountId}}\",\n    \"currency\": \"EUR\"\n}",
+					"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"balance\": {\n        \"amount\": 500000,\n        \"currency\": \"XAF\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -107,14 +108,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/account/update",
+					"raw": "localhost:3000/accounts/{{accountId}}",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"account",
-						"update"
+						"accounts",
+						"{{accountId}}"
 					]
 				}
 			},
@@ -142,8 +143,28 @@
 		{
 			"name": "Delete account",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"accountId\": \"{{accountId2}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/accounts/delete",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"accounts",
+						"delete"
+					]
+				}
 			},
 			"response": []
 		}
@@ -181,12 +202,12 @@
 		},
 		{
 			"key": "accountId",
-			"value": "2d49ccb8-ab5e-412a-be81-a51f35677696",
+			"value": "7c5b7d36-6a77-4879-8181-900b3276dcf8",
 			"type": "default"
 		},
 		{
 			"key": "accountId2",
-			"value": "af5a399b-cbac-4c19-b834-62730c042af7",
+			"value": "7551662f-98d1-483f-9664-b392147fedc4",
 			"type": "default"
 		}
 	]

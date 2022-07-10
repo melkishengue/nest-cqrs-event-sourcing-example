@@ -19,11 +19,14 @@ Testing: use the following curl request to test the app or import the provided p
 
 ### Create an account:
 ```
-curl --location --request POST 'localhost:3000/accounts/create' \
+curl --location --request POST 'localhost:3000/accounts/' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "userId": "93133852-faa4-11ec-b939-0242ac120002",
-    "currency": "USD"
+    "balance": {
+        "currency": "USD",
+        "amount": 400
+    }
 }'
 ```
 
@@ -45,9 +48,8 @@ Response:
                 "options": {}
             },
             "isDeleted": false,
-            "INITIAL_SALDO": 1000,
             "money": {
-                "amount": 1000,
+                "amount": 400,
                 "currency": "USD"
             },
             "createdAt": "2022-07-03T08:09:48.741Z",
@@ -58,13 +60,12 @@ Response:
 ```
 
 ### Update an account:
-Update account to currency EURO:
+Update account to currency EUR:
 ```
-curl --location --request POST 'localhost:3000/accounts/update' \
+curl --location --request PATCH 'localhost:3000/accounts/f09221aa-faa4-11ec-b939-0242ac120002' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "userId": "93133852-faa4-11ec-b939-0242ac120002",
-    "accountId": "f09221aa-faa4-11ec-b939-0242ac120002",
     "currency": "EUR"
 }'
 ```
@@ -72,11 +73,10 @@ curl --location --request POST 'localhost:3000/accounts/update' \
 ### Transfer from one account to another:
 Transfer 100EUR (first create second accound like previously and use id in `receiverAccountId` field):
 ```
-curl --location --request POST 'localhost:3000/accounts/debit' \
+curl --location --request POST 'localhost:3000/accounts/2d49ccb8-ab5e-412a-be81-a51f35677696/debit' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "userId": "93133852-faa4-11ec-b939-0242ac120002",
-    "accountId": "2d49ccb8-ab5e-412a-be81-a51f35677696",
     "receiverAccountId": "af5a399b-cbac-4c19-b834-62730c042af7",
     "amount": 100,
     "currency": "EUR"
@@ -85,11 +85,10 @@ curl --location --request POST 'localhost:3000/accounts/debit' \
 
 ### Delete account:
 ```
-curl --location --request POST 'localhost:3000/accounts/delete' \
+curl --location --request DELETE 'localhost:3000/accounts/2d49ccb8-ab5e-412a-be81-a51f35677696' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "userId": "93133852-faa4-11ec-b939-0242ac120002",
-    "accountId": "f09221aa-faa4-11ec-b939-0242ac120002"
+    "userId": "93133852-faa4-11ec-b939-0242ac120002"
 }'
 ```
 

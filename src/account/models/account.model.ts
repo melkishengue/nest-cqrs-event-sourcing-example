@@ -43,7 +43,7 @@ export class Account extends AccountAggregateRoot {
   }
 
   updateAccount(accountId: string, userId: string, currency?: Currency, balance?: Money) {
-    if (!(currency && Object.values(Currency).includes(currency))) {
+    if (currency && !(Object.values(Currency).includes(currency))) {
       throw new BadRequestException(`Unknown currency ${currency}`);
     }
 
