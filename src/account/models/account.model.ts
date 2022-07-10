@@ -28,7 +28,7 @@ export class Account extends AccountAggregateRoot {
   }
 
   createAccount(userAccounts: Account[], currency: Currency, balance: Money) {
-    if (userAccounts && userAccounts.length >= 2) {
+    if (userAccounts && userAccounts.length >= 12) {
       // Business rule: no user should have more than 2 accounts
       throw new ForbiddenException(`User ${this.userId} already has ${userAccounts.length} accounts!`);
     }

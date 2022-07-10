@@ -32,7 +32,7 @@ curl --location --request POST 'localhost:3000/accounts/' \
 
 ### View all accounts for user:
 ```
-curl --location --request GET 'localhost:3000/users/93133852-faa4-11ec-b939-0242ac120002'
+curl --location --request GET 'localhost:3000/queries/users/93133852-faa4-11ec-b939-0242ac120002'
 ```
 Response:
 
@@ -41,20 +41,13 @@ Response:
     "userId": "93133852-faa4-11ec-b939-0242ac120002",
     "accounts": [
         {
-            "id": "2d49ccb8-ab5e-412a-be81-a51f35677696",
-            "userId": "93133852-faa4-11ec-b939-0242ac120002",
-            "logger": {
-                "context": "Account",
-                "options": {}
-            },
-            "isDeleted": false,
-            "money": {
+            "accountId": "f09221aa-faa4-11ec-b939-0242ac120002",
+            "balance": {
                 "amount": 400,
                 "currency": "USD"
             },
-            "createdAt": "2022-07-03T08:09:48.741Z",
-            "lastUpdatedAt": "2022-07-03T08:09:48.741Z"
-        }
+            "creationDate": "2022-07-10T12:32:09.915Z"
+        },
     ]
 }
 ```
