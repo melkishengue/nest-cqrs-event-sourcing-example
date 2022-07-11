@@ -2,12 +2,23 @@ import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
+export interface Balance {
+  currency: string,
+  amount: number,
+}
+
+export interface OperationLog {
+  type: 'PLUS' | 'MINUS',
+  newBalance: Balance,
+  date: string,
+  receiverId?: string,
+  senderId?: string
+}
+
 export interface UserAccount {
   accountId: string,
-  balance: {
-    currency: string,
-    amount: number,
-  },
+  balance: Balance,
+  operations: OperationLog[],
   creationDate: string,
 }
 
@@ -18,23 +29,33 @@ export class UserAccountRepository implements OnModuleInit {
   private userAccounts: Record<string, UserAccount[]> = {};
 
   onModuleInit() {
-    try {
-      const eventsData = readFileSync(this.DB_PATH, 'utf-8');
-      this.userAccounts = JSON.parse(eventsData);
-    } catch (error) {
-      this.logger.warn(`File ${this.DB_PATH} was not found. It will be created at the first insert`);
-    }
-
     // persist events to database every 3 seconds
-    setInterval(() => this.flushIntoDatabase(), 3000);
+    setInterval(() => this.flushIntoDatabaseFile(), 3000);
   }
 
+  // performs an upsert
   save(userId: string, userAccount: UserAccount): void {
     if (!this.userAccounts[userId]) {
       this.userAccounts[userId] = [];
     }
 
+    const accountExists = this.userAccounts[userId]
+      .find(account => account.accountId === userAccount.accountId);
+
+    if (accountExists) {
+      this.userAccounts[userId] = this.userAccounts[userId].map(account => {
+        return account.accountId === userAccount.accountId ? userAccount : account
+      });
+
+      return;
+    }
+
     this.userAccounts[userId].push(userAccount);
+  }
+
+  findOneById(userId: string, accountId: string): UserAccount {
+    return this.userAccounts[userId]
+      .find(account => account.accountId === accountId);
   }
 
   delete(userId: string, accountId: string): void {
@@ -51,7 +72,7 @@ export class UserAccountRepository implements OnModuleInit {
     return this.userAccounts[userId];
   }
 
-  flushIntoDatabase(): void {
+  flushIntoDatabaseFile(): void {
     // 🖕 event-loop
     writeFileSync(this.DB_PATH, JSON.stringify(this.userAccounts, null, 4));
   }

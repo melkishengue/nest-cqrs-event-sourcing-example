@@ -110,6 +110,7 @@ export class Account extends AccountAggregateRoot {
     this.apply(new AccountCreditedEvent(
       this.userId,
       this.id,
+      senderAccountId,
       { amount: money.getAmount(), currency: money.getCurrency() },
       (new Date()).toISOString()));
   }

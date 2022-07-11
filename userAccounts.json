@@ -1,12 +1,50 @@
 {
     "a93133852-faa4-11ec-b939-0242ac120002": [
         {
+            "accountId": "0826214e-66b6-41c3-920f-6aa0f1e71edc",
+            "balance": {
+                "currency": "EUR",
+                "amount": 265.38461538461536
+            },
+            "creationDate": "2022-07-10T16:36:17.658Z",
+            "operations": [
+                {
+                    "type": "MINUS",
+                    "newBalance": {
+                        "currency": "EUR",
+                        "amount": 357.6923076923077
+                    },
+                    "date": "2022-07-10T16:48:10.310Z",
+                    "receiverId": "7551662f-98d1-483f-9664-b392147fedc4"
+                },
+                {
+                    "type": "MINUS",
+                    "newBalance": {
+                        "currency": "EUR",
+                        "amount": 265.38461538461536
+                    },
+                    "date": "2022-07-10T16:50:05.109Z",
+                    "receiverId": "f490a70a-4495-4355-a26c-71a534f54cda"
+                }
+            ]
+        },
+        {
             "accountId": "f490a70a-4495-4355-a26c-71a534f54cda",
             "balance": {
-                "amount": 450,
-                "currency": "EUR"
+                "currency": "EUR",
+                "amount": 542.3076923076923
             },
-            "creationDate": "2022-07-10T16:36:42.696Z"
+            "creationDate": "2022-07-10T16:36:42.696Z",
+            "operations": [
+                {
+                    "type": "PLUS",
+                    "newBalance": {
+                        "currency": "EUR",
+                        "amount": 542.3076923076923
+                    },
+                    "date": "2022-07-10T16:50:06.112Z"
+                }
+            ]
         },
         {
             "accountId": "7a7714c3-8262-4cb5-8954-f9f0b2e9481c",
@@ -14,7 +52,98 @@
                 "amount": 10,
                 "currency": "USD"
             },
-            "creationDate": "2022-07-10T16:37:43.674Z"
+            "creationDate": "2022-07-10T16:37:43.674Z",
+            "operations": []
+        },
+        {
+            "accountId": "0c1f7d57-1d83-4d25-ab01-45ad90af18f1",
+            "balance": {
+                "currency": "USD",
+                "amount": 2
+            },
+            "creationDate": "2022-07-11T21:31:22.024Z",
+            "operations": [
+                {
+                    "type": "MINUS",
+                    "newBalance": {
+                        "currency": "USD",
+                        "amount": 8
+                    },
+                    "date": "2022-07-11T21:33:38.989Z",
+                    "receiverId": "eceb135c-8207-46ac-bb83-b778507b9904"
+                },
+                {
+                    "type": "MINUS",
+                    "newBalance": {
+                        "currency": "USD",
+                        "amount": 6
+                    },
+                    "date": "2022-07-11T22:23:13.810Z",
+                    "receiverId": "eceb135c-8207-46ac-bb83-b778507b9904"
+                },
+                {
+                    "type": "MINUS",
+                    "newBalance": {
+                        "currency": "USD",
+                        "amount": 4
+                    },
+                    "date": "2022-07-11T22:53:20.006Z",
+                    "receiverId": "eceb135c-8207-46ac-bb83-b778507b9904"
+                },
+                {
+                    "type": "MINUS",
+                    "newBalance": {
+                        "currency": "USD",
+                        "amount": 2
+                    },
+                    "date": "2022-07-11T22:56:17.841Z",
+                    "receiverId": "eceb135c-8207-46ac-bb83-b778507b9904"
+                }
+            ]
+        },
+        {
+            "accountId": "eceb135c-8207-46ac-bb83-b778507b9904",
+            "balance": {
+                "currency": "USD",
+                "amount": 18
+            },
+            "creationDate": "2022-07-11T21:32:06.906Z",
+            "operations": [
+                {
+                    "type": "PLUS",
+                    "newBalance": {
+                        "currency": "USD",
+                        "amount": 12
+                    },
+                    "date": "2022-07-11T21:33:39.993Z"
+                },
+                {
+                    "type": "PLUS",
+                    "newBalance": {
+                        "currency": "USD",
+                        "amount": 14
+                    },
+                    "date": "2022-07-11T22:23:14.836Z"
+                },
+                {
+                    "type": "PLUS",
+                    "newBalance": {
+                        "currency": "USD",
+                        "amount": 16
+                    },
+                    "date": "2022-07-11T22:53:21.012Z",
+                    "senderId": "0c1f7d57-1d83-4d25-ab01-45ad90af18f1"
+                },
+                {
+                    "type": "PLUS",
+                    "newBalance": {
+                        "currency": "USD",
+                        "amount": 18
+                    },
+                    "date": "2022-07-11T22:56:18.843Z",
+                    "senderId": "0c1f7d57-1d83-4d25-ab01-45ad90af18f1"
+                }
+            ]
         }
     ]
 }

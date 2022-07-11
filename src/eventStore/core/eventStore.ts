@@ -1,9 +1,15 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { createReadStream, readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { DomainEvent } from "../../account/events/impl";
 
-export type EnhancedDomainEvent = { rowId: string, aggregateId: string, event: DomainEvent, createdAt: Date, version: number };
+export type EnhancedDomainEvent = {
+  rowId: string,
+  aggregateId: string,
+  event: DomainEvent,
+  createdAt: Date,
+  version: number
+};
 
 export interface Handler {
   handle(event: EnhancedDomainEvent): void
@@ -18,15 +24,10 @@ export class EventStore implements OnModuleInit {
   protected readonly logger = new Logger(EventStore.name);
   
   onModuleInit() {
-    try {
-      const eventsData = readFileSync(this.DB_PATH, 'utf-8');
-      this.streams = JSON.parse(eventsData);
-    } catch (error) {
-      this.logger.warn(`File ${this.DB_PATH} was not found. It will be created at the first insert`);
-    }
+    this.streams = this.loadDataFromFile();
 
     // persist events to database every 3 seconds
-    setInterval(() => this.flushIntoDatabase(), 3000);
+    setInterval(() => this.flushIntoDatabaseFile(), 3000);
   }
   
   saveEvent(rowId: string, aggregateId: string, event: DomainEvent, aggregateName: string): void {
@@ -43,21 +44,6 @@ export class EventStore implements OnModuleInit {
     this.notifyListeners(_event);
   }
 
-  notifyListeners(event: EnhancedDomainEvent): void {
-    this.handlers['*'].forEach(handler => {
-      handler.handle(event);
-    });
-  }
-
-  subscribeToStream(eventType: string, handler: Handler) {  
-    if (!this.handlers[eventType]) {
-      this.handlers[eventType] = [];
-    }
-    
-    this.handlers[eventType].push(handler);
-    this.logger.debug(`Subscribed to stream ${eventType}`);
-  }
-
   getEventsByRowId(rowId: string, aggregateName: string): DomainEvent[] {
     const _rowId = `${rowId}:${aggregateName}`;
     return this.streams
@@ -71,7 +57,40 @@ export class EventStore implements OnModuleInit {
       .map(e => e.event);
   }
 
-  flushIntoDatabase(): void {
+  
+
+  notifyListeners(event: EnhancedDomainEvent): void {
+    this.handlers['*'].forEach(handler => {
+      handler.handle(event);
+    });
+  }
+
+  subscribeToStream(eventType: string, handler: Handler) {
+    if (!this.handlers[eventType]) {
+      this.handlers[eventType] = [];
+    }
+    
+    this.handlers[eventType].push(handler);
+    this.logger.debug(`Subscribed to stream ${eventType}`);
+  }
+
+  getAllEvents(handler: Handler) {
+    const data = readFileSync(this.DB_PATH, 'utf-8');
+    const streams = this.loadDataFromFile();
+    streams.forEach(stream => handler.handle(stream));
+  }
+
+  loadDataFromFile(): EnhancedDomainEvent[] {
+    try {
+      const eventsData = readFileSync(this.DB_PATH, 'utf-8');
+      return JSON.parse(eventsData);
+    } catch (error) {
+      this.logger.error(`Faild to load data file ${this.DB_PATH}.`);
+      return [];
+    }
+  }
+
+  flushIntoDatabaseFile(): void {
     // 🖕 event-loop
     writeFileSync(this.DB_PATH, JSON.stringify(this.streams, null, 4));
   }
