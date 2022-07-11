@@ -1,5 +1,9 @@
 import { Currency } from "../value-objects";
 
+export interface MoneyDto {
+  amount: number, currency: Currency
+}
+
 export interface DebitAccountDto {
   userId: string,
   money: {
@@ -11,9 +15,7 @@ export interface DebitAccountDto {
 
 export interface CreateAccountDto {
   userId: string,
-  balance?: {
-    amount: number, currency: Currency
-  },
+  balance?: MoneyDto,
 }
 
 export type UpdateAccountDto = Partial<CreateAccountDto & { currency?: Currency, }>

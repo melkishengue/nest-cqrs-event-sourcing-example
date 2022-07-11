@@ -1,11 +1,12 @@
-import { Currency, Money } from "../../value-objects";
+import { MoneyDto } from "../../dto";
+import { Currency } from "../../value-objects";
 
 export class AccountUpdatedEvent {
   constructor(
     public readonly userId: string,
     public readonly accountId: string,
     public readonly currency: Currency,
-    public readonly balance: Money,
+    public readonly balance: MoneyDto,
     public readonly creationDate: string,
   ) {}
 

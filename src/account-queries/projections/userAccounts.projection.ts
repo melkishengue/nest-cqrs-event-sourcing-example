@@ -27,20 +27,28 @@ export class UserAccountsProjection {
       return;
     }
 
-    const { accountId, balance, creationDate, userId } = event.event;
-    switch(eventType) {
-      case 'AccountCreatedEvent':
-        this.userAccountRepo.save(userId, {
-          accountId,
-          balance,
-          creationDate
-        });
-        this.eventIds.push(event.version);
-      case 'AccountDeletedEvent':
-        this.userAccountRepo.delete(userId, accountId);
-        this.eventIds.push(event.version);
-      default:
-        // unknown event
+    const methodName = `handle${eventType}`;
+
+    if (!this[methodName]) {
+      return;
     }
+
+    this[methodName](event);
+  }
+
+  handleAccountCreatedEvent(event): void {
+    const { accountId, balance, creationDate, userId } = event.event;
+    this.userAccountRepo.save(userId, {
+      accountId,
+      balance,
+      creationDate
+    });
+    this.eventIds.push(event.version);
+  }
+
+  handleAccountDeletedEvent(event): void {
+    const { accountId, userId } = event.event;
+    this.userAccountRepo.delete(userId, accountId);
+        this.eventIds.push(event.version);
   }
 }

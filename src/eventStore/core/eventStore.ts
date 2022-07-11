@@ -49,7 +49,7 @@ export class EventStore implements OnModuleInit {
     });
   }
 
-  subscribeToStream(eventType: string, handler: Handler) {
+  subscribeToStream(eventType: string, handler: Handler) {  
     if (!this.handlers[eventType]) {
       this.handlers[eventType] = [];
     }

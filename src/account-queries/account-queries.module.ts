@@ -3,7 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { EventStoreModule } from '../eventStore/eventStore.module';
 import { AccountQueriesController } from './account-queries.controller';
 import { projections } from './projections';
-import { QueryHandlers } from './queries/handlers';
+import { queryHandlers } from './queries/handlers';
 import { repositories } from './repositories';
 
 @Module({
@@ -12,7 +12,7 @@ import { repositories } from './repositories';
   providers: [
     ...projections,
     ...repositories,
-    ...QueryHandlers
+    ...queryHandlers
   ],
 })
 export class AccountQueriesModule {}

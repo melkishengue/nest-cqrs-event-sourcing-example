@@ -35,7 +35,7 @@ export class AccountController {
     const { userId, balance } = createAccountDto;
     return this.commandBus.execute(new CreateAccountCommand(
       userId,
-      new Money(balance.amount, balance.currency)
+      Money.create(balance.amount, balance.currency)
     ));
   }
 
@@ -46,7 +46,7 @@ export class AccountController {
       accountId,
       userId,
       currency,
-      balance ? new Money(balance.amount, balance.currency) : undefined));
+      balance ? Money.create(balance.amount, balance.currency) : undefined));
   }
 
   @Post('/:id/debit')
@@ -54,7 +54,7 @@ export class AccountController {
     const { userId, receiverAccountId, money } = debitAccountDto;
     return this.commandBus.execute(
       new DebitAccountCommand(
-        userId, accountId, receiverAccountId, new Money(money.amount, money.currency)));
+        userId, accountId, receiverAccountId, Money.create(money.amount, money.currency)));
   }
 
   @Delete('/:id')

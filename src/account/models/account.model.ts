@@ -1,7 +1,5 @@
 import { v4 as uuid } from 'uuid';
 import { BadRequestException, ForbiddenException, Logger, MethodNotAllowedException } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer'
-import { AggregateRoot } from '@nestjs/cqrs';
 import {
   AccountCreatedEvent,
   AccountCreditedEvent,
@@ -38,7 +36,7 @@ export class Account extends AccountAggregateRoot {
       accountId,
       this.userId,
       currency,
-      balance,
+      { amount: balance.getAmount(), currency: balance.getCurrency() },
       (new Date()).toISOString()));
   }
 
@@ -51,7 +49,12 @@ export class Account extends AccountAggregateRoot {
       throw new BadRequestException(`Cannot set balance to negative value`);
     }
 
-    this.apply(new AccountUpdatedEvent(this.userId, this.id, currency, balance, (new Date()).toISOString()));
+    this.apply(new AccountUpdatedEvent(
+      this.userId,
+      this.id,
+      currency,
+      { amount: balance.getAmount(), currency: balance.getCurrency() },
+      (new Date()).toISOString()));
   }
 
   deleteAccount() {
@@ -71,7 +74,12 @@ export class Account extends AccountAggregateRoot {
       throw new MethodNotAllowedException(`Account ${this.id} has been deleted`);
     }
 
-    this.apply(new AccountDebitedEvent(this.userId, this.id, receiverAccountId, money, (new Date()).toISOString()));
+    this.apply(new AccountDebitedEvent(
+      this.userId,
+      this.id,
+      receiverAccountId,
+      { amount: money.getAmount(), currency: money.getCurrency() },
+      (new Date()).toISOString()));
   }
 
   creditAccount(senderAccountId: string, money: Money) {
@@ -79,22 +87,36 @@ export class Account extends AccountAggregateRoot {
     const transactionFailed = Math.random() < 0.2;
     if (transactionFailed) {
       this.logger.error('Fund transfer failed. Transaction needs to be rollbacked');
-      this.apply(new AccountCreditFailedEvent(this.userId, senderAccountId, this.id , money, (new Date()).toISOString()));
+      this.apply(new AccountCreditFailedEvent(
+        this.userId,
+        senderAccountId,
+        this.id ,
+        { amount: money.getAmount(), currency: money.getCurrency() },
+        (new Date()).toISOString()));
       return;
     }
     
     if (this.isDeleted) {
       this.logger.error(`Account ${this.id} has been deleted`);
-      this.apply(new AccountCreditFailedEvent(this.userId, senderAccountId, this.id , money, (new Date()).toISOString()));
+      this.apply(new AccountCreditFailedEvent(
+        this.userId,
+        senderAccountId,
+        this.id ,
+        { amount: money.getAmount(), currency: money.getCurrency() },
+        (new Date()).toISOString()));
       return;
     }
 
-    this.apply(new AccountCreditedEvent(this.userId, this.id, money, (new Date()).toISOString()));
+    this.apply(new AccountCreditedEvent(
+      this.userId,
+      this.id,
+      { amount: money.getAmount(), currency: money.getCurrency() },
+      (new Date()).toISOString()));
   }
 
   onAccountCreatedEvent(event: AccountCreatedEvent): void {
     this.id = event.accountId;
-    this.money = plainToInstance(Money, event.balance);
+    this.money = Money.create(event.balance.amount, event.balance.currency);
     this.isDeleted = false;
     this.createdAt = event.creationDate;
     this.lastUpdatedAt = event.creationDate;
@@ -106,7 +128,7 @@ export class Account extends AccountAggregateRoot {
     }
 
     if (event.balance) {
-      this.money = plainToInstance(Money, event.balance);
+      this.money = Money.create(event.balance.amount, event.balance.currency);
     }
 
     this.lastUpdatedAt = event.creationDate;
@@ -118,13 +140,13 @@ export class Account extends AccountAggregateRoot {
   }
 
   onAccountDebitedEvent(event: AccountDebitedEvent): void {
-    const savedMoney = plainToInstance(Money, event.money);
+    const savedMoney = Money.create(event.money.amount, event.money.currency);
     this.money = this.money.decreaseAmount(savedMoney);
     this.lastUpdatedAt = event.creationDate;
   }
 
   onAccountCreditedEvent(event: AccountCreditedEvent): void {
-    const savedMoney = plainToInstance(Money, event.money);
+    const savedMoney = Money.create(event.money.amount, event.money.currency);
     this.money = this.money.increaseAmount(savedMoney);
     this.lastUpdatedAt = event.creationDate;
   }

@@ -3,7 +3,12 @@ import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
 export interface UserAccount {
-  accountId: string, balance: { currency: string, amount: number }, creationDate: string
+  accountId: string,
+  balance: {
+    currency: string,
+    amount: number,
+  },
+  creationDate: string,
 }
 
 @Injectable()
@@ -43,7 +48,7 @@ export class UserAccountRepository implements OnModuleInit {
   }
 
   getAccounts(userId: string):  UserAccount[] {
-    return this.userAccounts[userId]
+    return this.userAccounts[userId];
   }
 
   flushIntoDatabase(): void {

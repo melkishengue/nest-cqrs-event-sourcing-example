@@ -1,62 +1,20 @@
 {
-    "undefined": [
-        {
-            "accountId": "935582b0-fd91-475e-8368-3fd421048994",
-            "balance": {
-                "amount": 400,
-                "currency": "EUR"
-            },
-            "creationDate": "2022-07-10T12:28:21.518Z"
-        },
-        {
-            "accountId": "6aff7e79-4d4f-47f9-afec-037559fd3e61",
-            "balance": {
-                "amount": 400,
-                "currency": "EUR"
-            },
-            "creationDate": "2022-07-10T12:31:22.007Z"
-        }
-    ],
     "a93133852-faa4-11ec-b939-0242ac120002": [
         {
-            "accountId": "9ae15e22-ee3a-40e3-afa3-5390749d6821",
+            "accountId": "f490a70a-4495-4355-a26c-71a534f54cda",
             "balance": {
-                "amount": 400,
+                "amount": 450,
                 "currency": "EUR"
             },
-            "creationDate": "2022-07-10T12:32:09.915Z"
+            "creationDate": "2022-07-10T16:36:42.696Z"
         },
         {
-            "accountId": "e83e5390-9261-486c-bd2b-ffd429c5edd4",
+            "accountId": "7a7714c3-8262-4cb5-8954-f9f0b2e9481c",
             "balance": {
-                "amount": 400,
-                "currency": "EUR"
-            },
-            "creationDate": "2022-07-10T12:34:17.278Z"
-        },
-        {
-            "accountId": "6ab8a7fe-566c-4922-b7cd-05c432d5dd78",
-            "balance": {
-                "amount": 400,
-                "currency": "EUR"
-            },
-            "creationDate": "2022-07-10T12:34:38.354Z"
-        },
-        {
-            "accountId": "4455ffea-20b8-442b-bcc4-97a5cc45623d",
-            "balance": {
-                "amount": 400,
-                "currency": "EUR"
-            },
-            "creationDate": "2022-07-10T12:41:00.059Z"
-        },
-        {
-            "accountId": "9221fde8-14fc-489f-8b3d-810276d260a1",
-            "balance": {
-                "amount": 100,
+                "amount": 10,
                 "currency": "USD"
             },
-            "creationDate": "2022-07-10T12:45:03.268Z"
+            "creationDate": "2022-07-10T16:37:43.674Z"
         }
     ]
 }

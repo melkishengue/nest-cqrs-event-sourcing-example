@@ -1,3 +1,3 @@
-import { GetUserAccountsHandler } from './get-user.handler';
+import { GetUserAccountsHandler } from './get-userAccounts.handler';
 
-export const QueryHandlers = [GetUserAccountsHandler];
+export const queryHandlers = [GetUserAccountsHandler];
