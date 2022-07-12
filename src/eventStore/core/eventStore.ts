@@ -11,14 +11,14 @@ export type EnhancedDomainEvent = {
   version: number
 };
 
-export interface Handler {
+export interface EventStoreEventHandler {
   handle(event: EnhancedDomainEvent): void
 }
 
 @Injectable()
 export class EventStore implements OnModuleInit {
   streams: EnhancedDomainEvent[] = [];
-  handlers: Record<string, Handler[]> = {};
+  handlers: Record<string, EventStoreEventHandler[]> = {};
   
   protected readonly DB_PATH = resolve('events.json');
   protected readonly logger = new Logger(EventStore.name);
@@ -65,7 +65,7 @@ export class EventStore implements OnModuleInit {
     });
   }
 
-  subscribeToStream(eventType: string, handler: Handler) {
+  subscribeToStream(eventType: string, handler: EventStoreEventHandler) {
     if (!this.handlers[eventType]) {
       this.handlers[eventType] = [];
     }
@@ -74,7 +74,7 @@ export class EventStore implements OnModuleInit {
     this.logger.debug(`Subscribed to stream ${eventType}`);
   }
 
-  getAllEvents(handler: Handler) {
+  getAllEvents(handler: EventStoreEventHandler) {
     const data = readFileSync(this.DB_PATH, 'utf-8');
     const streams = this.loadDataFromFile();
     streams.forEach(stream => handler.handle(stream));

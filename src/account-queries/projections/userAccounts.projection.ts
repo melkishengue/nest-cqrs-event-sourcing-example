@@ -4,12 +4,12 @@
 import { Injectable } from "@nestjs/common";
 import { MoneyDto } from "../../account/dto";
 import { Currency, Money } from "../../account/value-objects";
-import { EventStore } from "../../eventStore/core/eventStore";
+import { EnhancedDomainEvent, EventStore, EventStoreEventHandler } from "../../eventStore/core/eventStore";
 import { UserAccountRepository } from "../repositories/userAccounts.repository";
 
 @Injectable()
-export class UserAccountsProjection {
-  eventIds: string[] = [];
+export class UserAccountsProjection implements EventStoreEventHandler {
+  eventIds: number[] = [];
   eventTypesOfInterest = [
     'AccountCreatedEvent',
     'AccountDeletedEvent',
@@ -28,7 +28,7 @@ export class UserAccountsProjection {
     this.createProjection();
   }
 
-  handle(event) {
+  handle(event: EnhancedDomainEvent) {
     if (this.eventIds.includes(event.version)) {
       // abort if event has already been processed
       return;

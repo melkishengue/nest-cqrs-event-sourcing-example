@@ -35,7 +35,7 @@ export class Account extends AccountAggregateRoot {
       accountId.getValue(),
       this.userId.getValue(),
       currency,
-      { amount: balance.getAmount(), currency: balance.getCurrency() },
+      Money.toDto(balance),
       (new Date()).toISOString()));
   }
 
@@ -52,7 +52,7 @@ export class Account extends AccountAggregateRoot {
       this.userId.getValue(),
       this.id.getValue(),
       currency,
-      balance ? { amount: balance.getAmount(), currency: balance.getCurrency() } : undefined,
+      balance ? Money.toDto(balance) : undefined,
       (new Date()).toISOString()));
   }
 
@@ -80,7 +80,7 @@ export class Account extends AccountAggregateRoot {
       this.userId.getValue(),
       this.id.getValue(),
       receiverAccountId.getValue(),
-      { amount: money.getAmount(), currency: money.getCurrency() },
+      Money.toDto(money),
       (new Date()).toISOString()));
   }
 
@@ -93,19 +93,19 @@ export class Account extends AccountAggregateRoot {
         this.userId.getValue(),
         senderAccountId.getValue(),
         this.id.getValue(),
-        { amount: money.getAmount(), currency: money.getCurrency() },
+        Money.toDto(money),
         (new Date()).toISOString()));
-      return;
-    }
-    
-    if (this.isDeleted) {
-      this.logger.error(`Account ${this.id} has been deleted`);
-      this.apply(new AccountCreditFailedEvent(
-        this.userId.getValue(),
-        senderAccountId.getValue(),
-        this.id.getValue(),
-        { amount: money.getAmount(), currency: money.getCurrency() },
-        (new Date()).toISOString()));
+        return;
+      }
+      
+      if (this.isDeleted) {
+        this.logger.error(`Account ${this.id} has been deleted`);
+        this.apply(new AccountCreditFailedEvent(
+          this.userId.getValue(),
+          senderAccountId.getValue(),
+          this.id.getValue(),
+          Money.toDto(money),
+          (new Date()).toISOString()));
       return;
     }
 

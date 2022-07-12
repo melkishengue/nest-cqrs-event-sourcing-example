@@ -98,6 +98,13 @@ export class Money {
     return new Money(moneyDto.amount, moneyDto.currency);
   }
 
+  static toDto(money: Money): MoneyDto {
+    return {
+      amount: money.amount,
+      currency: money.currency,
+    }
+  }
+
   static convertToCurrency(money: Money, destinationCurrency: Currency): Money {
     if (money.getCurrency() === destinationCurrency) {
       return Money.create(money.getAmount(), money.getCurrency());
