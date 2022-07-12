@@ -4,7 +4,6 @@ import { CreateAccountCommand } from './commands/impl/create-account.command';
 import { UpdateAccountCommand } from './commands/impl/update-account.command';
 import { DebitAccountCommand } from './commands/impl/debit-account.command';
 import { DeleteAccountCommand } from './commands/impl/delete-account.command';
-import { GetAccountQuery, GetUserQuery } from './queries/impl';
 import { Money } from './value-objects/';
 import { HttpExceptionFilter } from './filters';
 import {
@@ -23,19 +22,12 @@ export class AccountController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  // TODO: will be moved to the query side 
-  @Get('/:id')
-  async getAccount(@Param('id') accountId: string, @Body() getAccountDto: GetAccountDto) {
-    const { userId } = getAccountDto;
-    return this.queryBus.execute(new GetAccountQuery(userId, accountId));
-  }
-
   @Post('/')
   async createAccount(@Body() createAccountDto: CreateAccountDto) {
     const { userId, balance } = createAccountDto;
     return this.commandBus.execute(new CreateAccountCommand(
       userId,
-      Money.create(balance.amount, balance.currency)
+      Money.fromDto(balance)
     ));
   }
 
@@ -46,7 +38,7 @@ export class AccountController {
       accountId,
       userId,
       currency,
-      balance ? Money.create(balance.amount, balance.currency) : undefined));
+      balance ? Money.fromDto(balance) : undefined));
   }
 
   @Post('/:id/debit')
@@ -54,7 +46,7 @@ export class AccountController {
     const { userId, receiverAccountId, money } = debitAccountDto;
     return this.commandBus.execute(
       new DebitAccountCommand(
-        userId, accountId, receiverAccountId, Money.create(money.amount, money.currency)));
+        userId, accountId, receiverAccountId, Money.fromDto(money)));
   }
 
   @Delete('/:id')
@@ -62,20 +54,5 @@ export class AccountController {
     const { userId } = deleteAccountDto;
     return this.commandBus.execute(
       new DeleteAccountCommand(userId, accountId));
-  }
-}
-
-// should normally belong to a seperate module
-@UseFilters(new HttpExceptionFilter())
-@Controller('users')
-export class UserController {
-  constructor(
-    private readonly queryBus: QueryBus,
-  ) {}
-
-  // will be moved to the query side
-  @Get('/:userId')
-  async getUser(@Param('userId') userId: string) {
-    return this.queryBus.execute(new GetUserQuery(userId));
   }
 }

@@ -1,3 +1,5 @@
+import { MoneyDto } from "../dto";
+
 export enum Currency {
   Fcfa = 'XAF', Euro = 'EUR', Dollar = 'USD'
 }
@@ -90,6 +92,10 @@ export class Money {
 
   static create(amount: number, currency: Currency): Money {
     return new Money(amount, currency);
+  }
+
+  static fromDto(moneyDto: MoneyDto): Money {
+    return new Money(moneyDto.amount, moneyDto.currency);
   }
 
   static convertToCurrency(money: Money, destinationCurrency: Currency): Money {

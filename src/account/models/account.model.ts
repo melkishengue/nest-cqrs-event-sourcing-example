@@ -53,7 +53,7 @@ export class Account extends AccountAggregateRoot {
       this.userId,
       this.id,
       currency,
-      { amount: balance.getAmount(), currency: balance.getCurrency() },
+      balance ? { amount: balance.getAmount(), currency: balance.getCurrency() } : undefined,
       (new Date()).toISOString()));
   }
 
@@ -117,7 +117,7 @@ export class Account extends AccountAggregateRoot {
 
   onAccountCreatedEvent(event: AccountCreatedEvent): void {
     this.id = event.accountId;
-    this.money = Money.create(event.balance.amount, event.balance.currency);
+    this.money = Money.fromDto(event.balance);
     this.isDeleted = false;
     this.createdAt = event.creationDate;
     this.lastUpdatedAt = event.creationDate;
@@ -129,7 +129,7 @@ export class Account extends AccountAggregateRoot {
     }
 
     if (event.balance) {
-      this.money = Money.create(event.balance.amount, event.balance.currency);
+      this.money = Money.fromDto(event.balance);
     }
 
     this.lastUpdatedAt = event.creationDate;
@@ -141,13 +141,13 @@ export class Account extends AccountAggregateRoot {
   }
 
   onAccountDebitedEvent(event: AccountDebitedEvent): void {
-    const savedMoney = Money.create(event.money.amount, event.money.currency);
+    const savedMoney = Money.fromDto(event.money);
     this.money = this.money.decreaseAmount(savedMoney);
     this.lastUpdatedAt = event.creationDate;
   }
 
   onAccountCreditedEvent(event: AccountCreditedEvent): void {
-    const savedMoney = Money.create(event.money.amount, event.money.currency);
+    const savedMoney = Money.fromDto(event.money);
     this.money = this.money.increaseAmount(savedMoney);
     this.lastUpdatedAt = event.creationDate;
   }

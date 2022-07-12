@@ -23,7 +23,7 @@ export class AccountSagas {
             event.userId,
             event.receiverAccountId,
             event.accountId,
-            Money.create(event.money.amount, event.money.currency));
+            Money.fromDto(event.money))
         }),
       );
   }
@@ -40,8 +40,7 @@ export class AccountSagas {
           event.userId,
           event.accountId,
           event.receiverAccountId,
-          Money.create(event.money.amount,
-          event.money.currency));
+          Money.fromDto(event.money));
       }),
     );
   }

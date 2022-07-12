@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
-import { readFileSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import { resolve } from "path";
 
 export interface Balance {
@@ -8,7 +8,7 @@ export interface Balance {
 }
 
 export interface OperationLog {
-  type: 'PLUS' | 'MINUS',
+  type: 'DEPOSIT' | 'WITHDRAWAL' | 'BALANCE_UPDATE',
   newBalance: Balance,
   date: string,
   receiverId?: string,
@@ -70,6 +70,11 @@ export class UserAccountRepository implements OnModuleInit {
 
   getAccounts(userId: string):  UserAccount[] {
     return this.userAccounts[userId];
+  }
+
+  getAccount(userId: string, accountId):  UserAccount {
+    return this.userAccounts[userId]
+      .find(account => account.accountId === accountId);
   }
 
   flushIntoDatabaseFile(): void {
