@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { EventStore } from '../../eventStore/core/eventStore';
 import { DomainEvent } from '../events/impl';
 import { Account } from '../models/account.model';
+import { Id } from '../value-objects';
 
 const groupBy = <T>(array: T[], predicate: (v: T) => string) =>
   array.reduce((acc, value) => {
@@ -17,8 +18,8 @@ export class AccountRepository {
 
   protected readonly logger = new Logger(AccountRepository.name);
 
-  findOneById(accountId: string, userId: string): Account | null {
-    const events = this.eventStore.getEvents(accountId);
+  findOneById(accountId: Id, userId: Id): Account | null {
+    const events = this.eventStore.getEvents(accountId.getValue());
 
     if (events.length === 0) {
       return null;
@@ -30,12 +31,12 @@ export class AccountRepository {
     return account;
   }
 
-  getAllAccounts(userId: string): Account[] {
-    const events = this.eventStore.getEventsByRowId(userId, 'accountAggregate');
+  getAllAccounts(userId: Id): Account[] {
+    const events = this.eventStore.getEventsByRowId(userId.getValue(), 'accountAggregate');
     const eventsByAccountIds = groupBy<DomainEvent>(events, (e) => e.accountId);
     const accounts = Object.keys(eventsByAccountIds)
       .map(accountId => {
-        let account = new Account(accountId, userId);
+        let account = new Account(Id.fromString(accountId), userId);
         const events = eventsByAccountIds[accountId];
         account.loadFromHistory(events);
         return account;

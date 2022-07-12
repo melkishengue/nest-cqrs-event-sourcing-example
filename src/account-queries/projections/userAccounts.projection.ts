@@ -68,7 +68,7 @@ export class UserAccountsProjection {
       type: 'BALANCE_UPDATE',
       newBalance: account.balance,
       date: creationDate,
-      senderId: 'xxx'
+      senderId: '-'
     });
 
     this.userAccountRepo.save(userId, account);

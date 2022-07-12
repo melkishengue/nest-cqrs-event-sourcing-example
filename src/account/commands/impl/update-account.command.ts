@@ -1,9 +1,9 @@
-import { Currency, Money } from "../../value-objects";
+import { Currency, Id, Money } from "../../value-objects";
 
 export class UpdateAccountCommand {
   constructor(
-    public readonly accountId: string,
-    public readonly userId: string,
+    public readonly accountId: Id,
+    public readonly userId: Id,
     public readonly currency?: Currency,
     public readonly balance?: Money,
   ) {}

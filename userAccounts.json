@@ -15,7 +15,7 @@
                         "amount": 500000
                     },
                     "date": "2022-07-10T16:39:26.471Z",
-                    "senderId": "xxx"
+                    "senderId": "-"
                 },
                 {
                     "type": "WITHDRAWAL",
@@ -115,7 +115,7 @@
                         "amount": 500000
                     },
                     "date": "2022-07-11T23:48:03.728Z",
-                    "senderId": "xxx"
+                    "senderId": "-"
                 },
                 {
                     "type": "BALANCE_UPDATE",
@@ -124,7 +124,7 @@
                         "amount": 5000
                     },
                     "date": "2022-07-12T00:23:54.725Z",
-                    "senderId": "xxx"
+                    "senderId": "-"
                 },
                 {
                     "type": "BALANCE_UPDATE",
@@ -133,7 +133,7 @@
                         "amount": 5000
                     },
                     "date": "2022-07-12T00:26:03.093Z",
-                    "senderId": "xxx"
+                    "senderId": "-"
                 }
             ]
         },
@@ -178,6 +178,25 @@
                     },
                     "date": "2022-07-11T22:56:18.843Z",
                     "senderId": "0c1f7d57-1d83-4d25-ab01-45ad90af18f1"
+                }
+            ]
+        },
+        {
+            "accountId": "9e19a627-5144-46a6-97c0-f25f28b5ba79",
+            "balance": {
+                "currency": "EUR",
+                "amount": 9.6
+            },
+            "creationDate": "2022-07-12T01:04:21.811Z",
+            "operations": [
+                {
+                    "type": "BALANCE_UPDATE",
+                    "newBalance": {
+                        "currency": "EUR",
+                        "amount": 9.6
+                    },
+                    "date": "2022-07-12T01:05:19.077Z",
+                    "senderId": "-"
                 }
             ]
         }

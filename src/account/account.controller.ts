@@ -4,7 +4,7 @@ import { CreateAccountCommand } from './commands/impl/create-account.command';
 import { UpdateAccountCommand } from './commands/impl/update-account.command';
 import { DebitAccountCommand } from './commands/impl/debit-account.command';
 import { DeleteAccountCommand } from './commands/impl/delete-account.command';
-import { Money } from './value-objects/';
+import { Id, Money } from './value-objects/';
 import { HttpExceptionFilter } from './filters';
 import {
   CreateAccountDto,
@@ -26,7 +26,7 @@ export class AccountController {
   async createAccount(@Body() createAccountDto: CreateAccountDto) {
     const { userId, balance } = createAccountDto;
     return this.commandBus.execute(new CreateAccountCommand(
-      userId,
+      Id.fromString(userId),
       Money.fromDto(balance)
     ));
   }
@@ -35,8 +35,8 @@ export class AccountController {
   async updateAccount(@Param('id') accountId: string, @Body() updateAccountDto: UpdateAccountDto) {
     const { userId, currency, balance } = updateAccountDto;
     return this.commandBus.execute(new UpdateAccountCommand(
-      accountId,
-      userId,
+      Id.fromString(accountId),
+      Id.fromString(userId),
       currency,
       balance ? Money.fromDto(balance) : undefined));
   }
@@ -46,13 +46,18 @@ export class AccountController {
     const { userId, receiverAccountId, money } = debitAccountDto;
     return this.commandBus.execute(
       new DebitAccountCommand(
-        userId, accountId, receiverAccountId, Money.fromDto(money)));
+        Id.fromString(userId),
+        Id.fromString(accountId),
+        Id.fromString(receiverAccountId),
+        Money.fromDto(money)));
   }
 
   @Delete('/:id')
   async deleteAccount(@Param('id') accountId: string, @Body() deleteAccountDto: DeleteAccountDto) {
     const { userId } = deleteAccountDto;
     return this.commandBus.execute(
-      new DeleteAccountCommand(userId, accountId));
+      new DeleteAccountCommand(
+        Id.fromString(userId),
+        Id.fromString(accountId)));
   }
 }

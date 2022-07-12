@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import { BadRequestException, ForbiddenException, Logger, MethodNotAllowedException } from '@nestjs/common';
 import {
   AccountCreatedEvent,
@@ -6,12 +5,12 @@ import {
   AccountCreditFailedEvent, 
   AccountDebitedEvent
 } from '../events/impl';
-import { Currency, Money } from '../value-objects/';
+import { Currency, Id, Money } from '../value-objects/';
 import { AccountUpdatedEvent, AccountDeletedEvent } from '../events/impl/';
 import { AccountAggregateRoot } from './accountAggregateRoot';
 
 export class Account extends AccountAggregateRoot {
-  constructor(private id: string, private userId: string) {
+  constructor(private id: Id, private userId: Id) {
     super();
   }
 
@@ -29,18 +28,18 @@ export class Account extends AccountAggregateRoot {
     if (userAccounts && userAccounts.length >= 12) {
       // Business rule: no user should have more than 2 accounts
       throw new ForbiddenException(`User ${this.userId} already has ${userAccounts.length} accounts!`);
-    }
+    } 
 
-    const accountId = uuid();
+    const accountId = Id.create();
     this.apply(new AccountCreatedEvent(
-      accountId,
-      this.userId,
+      accountId.getValue(),
+      this.userId.getValue(),
       currency,
       { amount: balance.getAmount(), currency: balance.getCurrency() },
       (new Date()).toISOString()));
   }
 
-  updateAccount(accountId: string, userId: string, currency?: Currency, balance?: Money) {
+  updateAccount(accountId: Id, userId: Id, currency?: Currency, balance?: Money) {
     if (currency && !(Object.values(Currency).includes(currency))) {
       throw new BadRequestException(`Unknown currency ${currency}`);
     }
@@ -50,8 +49,8 @@ export class Account extends AccountAggregateRoot {
     }
 
     this.apply(new AccountUpdatedEvent(
-      this.userId,
-      this.id,
+      this.userId.getValue(),
+      this.id.getValue(),
       currency,
       balance ? { amount: balance.getAmount(), currency: balance.getCurrency() } : undefined,
       (new Date()).toISOString()));
@@ -62,10 +61,13 @@ export class Account extends AccountAggregateRoot {
       throw new BadRequestException(`Account ${this.id} has been deleted`);
     }
 
-    this.apply(new AccountDeletedEvent(this.userId, this.id, (new Date()).toISOString()));
+    this.apply(new AccountDeletedEvent(
+      this.userId.getValue(),
+      this.id.getValue(),
+      (new Date()).toISOString()));
   }
 
-  debitAccount(receiverAccountId: string, money: Money) {
+  debitAccount(receiverAccountId: Id, money: Money) {
     if (!this.money.canBeDecreasedOf(money)) {
       throw new MethodNotAllowedException('Your credit is not enough to perform this operation');
     }
@@ -75,22 +77,22 @@ export class Account extends AccountAggregateRoot {
     }
 
     this.apply(new AccountDebitedEvent(
-      this.userId,
-      this.id,
-      receiverAccountId,
+      this.userId.getValue(),
+      this.id.getValue(),
+      receiverAccountId.getValue(),
       { amount: money.getAmount(), currency: money.getCurrency() },
       (new Date()).toISOString()));
   }
 
-  creditAccount(senderAccountId: string, money: Money) {
+  creditAccount(senderAccountId: Id, money: Money) {
     // transaction fails with 20% probability
     const transactionFailed = Math.random() < 0.2;
     if (transactionFailed) {
       this.logger.error('Fund transfer failed. Transaction needs to be rollbacked');
       this.apply(new AccountCreditFailedEvent(
-        this.userId,
-        senderAccountId,
-        this.id ,
+        this.userId.getValue(),
+        senderAccountId.getValue(),
+        this.id.getValue(),
         { amount: money.getAmount(), currency: money.getCurrency() },
         (new Date()).toISOString()));
       return;
@@ -99,24 +101,24 @@ export class Account extends AccountAggregateRoot {
     if (this.isDeleted) {
       this.logger.error(`Account ${this.id} has been deleted`);
       this.apply(new AccountCreditFailedEvent(
-        this.userId,
-        senderAccountId,
-        this.id ,
+        this.userId.getValue(),
+        senderAccountId.getValue(),
+        this.id.getValue(),
         { amount: money.getAmount(), currency: money.getCurrency() },
         (new Date()).toISOString()));
       return;
     }
 
     this.apply(new AccountCreditedEvent(
-      this.userId,
-      this.id,
-      senderAccountId,
+      this.userId.getValue(),
+      this.id.getValue(),
+      senderAccountId.getValue(),
       { amount: money.getAmount(), currency: money.getCurrency() },
       (new Date()).toISOString()));
   }
 
   onAccountCreatedEvent(event: AccountCreatedEvent): void {
-    this.id = event.accountId;
+    this.id = Id.fromString(event.accountId);
     this.money = Money.fromDto(event.balance);
     this.isDeleted = false;
     this.createdAt = event.creationDate;
