@@ -3,7 +3,14 @@
 
 import { Injectable } from "@nestjs/common";
 import { MoneyDto } from "../../account/dto";
-import { Currency, Money } from "../../account/value-objects";
+import {
+  AccountCreatedEvent,
+  AccountCreditedEvent,
+  AccountDebitedEvent,
+  AccountUpdatedEvent,
+  AccountDeletedEvent
+} from "../../account/events/impl";
+import { Money } from "../../account/value-objects";
 import { EnhancedDomainEvent, EventStore, EventStoreEventHandler } from "../../eventStore/core/eventStore";
 import { UserAccountRepository } from "../repositories/userAccounts.repository";
 
@@ -11,11 +18,11 @@ import { UserAccountRepository } from "../repositories/userAccounts.repository";
 export class UserAccountsProjection implements EventStoreEventHandler {
   eventIds: number[] = [];
   eventTypesOfInterest = [
-    'AccountCreatedEvent',
-    'AccountDeletedEvent',
-    'AccountDebitedEvent',
-    'AccountCreditedEvent',
-    'AccountUpdatedEvent'
+    AccountCreatedEvent.name,
+    AccountDeletedEvent.name,
+    AccountDebitedEvent.name,
+    AccountCreditedEvent.name,
+    AccountUpdatedEvent.name
   ];
 
   constructor(
@@ -48,7 +55,7 @@ export class UserAccountsProjection implements EventStoreEventHandler {
     this[methodName](event);
   }
 
-  handleAccountUpdatedEvent(event) {
+  handleAccountUpdatedEvent(event: EnhancedDomainEvent<AccountUpdatedEvent>) {
     const { accountId, userId, balance, creationDate, currency } = event.event;
     const account = this.userAccountRepo.findOneById(userId, accountId);
 
@@ -66,6 +73,7 @@ export class UserAccountsProjection implements EventStoreEventHandler {
     
     account.operations.push({
       type: 'BALANCE_UPDATE',
+      amount: balance,
       newBalance: account.balance,
       date: creationDate,
       senderId: '-'
@@ -75,18 +83,19 @@ export class UserAccountsProjection implements EventStoreEventHandler {
     this.eventIds.push(event.version);
   }
 
-  handleAccountCreatedEvent(event): void {
+  handleAccountCreatedEvent(event: EnhancedDomainEvent<AccountCreatedEvent>): void {
     const { accountId, balance, creationDate, userId } = event.event;
     this.userAccountRepo.save(userId, {
       accountId,
       balance,
       creationDate,
-      operations: []
+      operations: [],
+      isDeleted: false,
     });
     this.eventIds.push(event.version);
   }
 
-  handleAccountCreditedEvent(event): void {
+  handleAccountCreditedEvent(event: EnhancedDomainEvent<AccountCreditedEvent>): void {
     const { accountId, userId, money, creationDate, senderAccountId } = event.event;
     const account = this.userAccountRepo.findOneById(userId, accountId);
     
@@ -97,6 +106,7 @@ export class UserAccountsProjection implements EventStoreEventHandler {
 
     account.operations.push({
       type: 'DEPOSIT',
+      amount: money,
       newBalance: account.balance,
       date: creationDate,
       senderId: senderAccountId
@@ -106,7 +116,7 @@ export class UserAccountsProjection implements EventStoreEventHandler {
     this.eventIds.push(event.version);
   }
 
-  handleAccountDebitedEvent(event): void {
+  handleAccountDebitedEvent(event: EnhancedDomainEvent<AccountDebitedEvent>): void {
     const { accountId, userId, money, creationDate, receiverAccountId} = event.event;
     const account = this.userAccountRepo.findOneById(userId, accountId);
     const currentBalance = Money
@@ -116,12 +126,19 @@ export class UserAccountsProjection implements EventStoreEventHandler {
 
     account.operations.push({
       type: 'WITHDRAWAL',
+      amount: money,
       newBalance: account.balance,
       date: creationDate,
       receiverId: receiverAccountId
     });
 
     this.userAccountRepo.save(userId, account);
+    this.eventIds.push(event.version);
+  }
+
+  handleAccountDeletedEvent(event: EnhancedDomainEvent<AccountDeletedEvent>): void {
+    const { accountId, userId, creationDate } = event.event;
+    this.userAccountRepo.delete(userId, accountId);
     this.eventIds.push(event.version);
   }
 

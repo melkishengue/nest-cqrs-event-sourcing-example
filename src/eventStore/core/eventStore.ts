@@ -3,10 +3,10 @@ import { resolve } from 'path';
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { DomainEvent } from "../../account/events/impl";
 
-export type EnhancedDomainEvent = {
+export type EnhancedDomainEvent<T = DomainEvent> = {
   rowId: string,
   aggregateId: string,
-  event: DomainEvent,
+  event: T,
   createdAt: Date,
   version: number
 };
@@ -56,8 +56,6 @@ export class EventStore implements OnModuleInit {
       .filter(e => e.aggregateId === aggregateId)
       .map(e => e.event);
   }
-
-  
 
   notifyListeners(event: EnhancedDomainEvent): void {
     this.handlers['*'].forEach(handler => {

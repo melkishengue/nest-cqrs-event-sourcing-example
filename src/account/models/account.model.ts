@@ -67,19 +67,23 @@ export class Account extends AccountAggregateRoot {
       (new Date()).toISOString()));
   }
 
-  debitAccount(receiverAccountId: Id, money: Money) {
+  debitAccount(receiverAccount: Account, money: Money) {
     if (!this.money.canBeDecreasedOf(money)) {
       throw new MethodNotAllowedException('Your credit is not enough to perform this operation');
     }
 
-    if (this.isDeleted) {
-      throw new MethodNotAllowedException(`Account ${this.id} has been deleted`);
+    if (!this.isAccountActive()) {
+      throw new MethodNotAllowedException(`Account ${this.id.getValue()} has been deleted`);
+    }
+
+    if (!receiverAccount.isAccountActive()) {
+      throw new MethodNotAllowedException(`Account ${receiverAccount.id.getValue()} has been deleted`);
     }
 
     this.apply(new AccountDebitedEvent(
       this.userId.getValue(),
       this.id.getValue(),
-      receiverAccountId.getValue(),
+      receiverAccount.id.getValue(),
       Money.toDto(money),
       (new Date()).toISOString()));
   }
@@ -95,11 +99,11 @@ export class Account extends AccountAggregateRoot {
         this.id.getValue(),
         Money.toDto(money),
         (new Date()).toISOString()));
-        return;
-      }
+      return;
+    }
       
-      if (this.isDeleted) {
-        this.logger.error(`Account ${this.id} has been deleted`);
+    if (!this.isAccountActive()) {
+        this.logger.error(`Account ${this.id.getValue()} has been deleted`);
         this.apply(new AccountCreditFailedEvent(
           this.userId.getValue(),
           senderAccountId.getValue(),

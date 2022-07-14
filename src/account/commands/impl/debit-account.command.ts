@@ -5,5 +5,6 @@ export class DebitAccountCommand {
     public userId: Id,
     public accountId: Id,
     public receiverAccountId: Id,
+    public receiverUserId: Id,
     public money: Money) {}
 }

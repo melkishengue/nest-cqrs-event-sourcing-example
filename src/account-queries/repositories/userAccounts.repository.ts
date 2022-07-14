@@ -9,6 +9,7 @@ export interface Balance {
 
 export interface OperationLog {
   type: 'DEPOSIT' | 'WITHDRAWAL' | 'BALANCE_UPDATE',
+  amount: Balance,
   newBalance: Balance,
   date: string,
   receiverId?: string,
@@ -20,6 +21,7 @@ export interface UserAccount {
   balance: Balance,
   operations: OperationLog[],
   creationDate: string,
+  isDeleted: boolean,
 }
 
 @Injectable()
@@ -55,7 +57,7 @@ export class UserAccountRepository implements OnModuleInit {
 
   findOneById(userId: string, accountId: string): UserAccount {
     return this.userAccounts[userId]
-      .find(account => account.accountId === accountId);
+      .find(account => ((account.accountId === accountId) && !account.isDeleted));
   }
 
   delete(userId: string, accountId: string): void {
@@ -65,16 +67,26 @@ export class UserAccountRepository implements OnModuleInit {
       return;
     }
 
-    this.userAccounts[userId] = accounts.filter(account => account.accountId !== accountId);
+    this.userAccounts[userId] = accounts
+      .map(account => {
+        if (account.accountId === accountId) {
+          return {
+            ...account,
+            isDeleted: true,
+          }
+        }
+
+        return account;
+      });
   }
 
   getAccounts(userId: string):  UserAccount[] {
-    return this.userAccounts[userId];
+    return this.userAccounts[userId].filter(account => !account.isDeleted);
   }
 
   getAccount(userId: string, accountId):  UserAccount {
     return this.userAccounts[userId]
-      .find(account => account.accountId === accountId);
+      .find(account => ((account.accountId === accountId) && !account.isDeleted));
   }
 
   flushIntoDatabaseFile(): void {

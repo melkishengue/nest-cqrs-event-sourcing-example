@@ -10,7 +10,8 @@ export interface DebitAccountDto {
     amount: number,
     currency: Currency,
   };
-  receiverAccountId: string
+  receiverAccountId: string,
+  receiverUserId: string,
 }
 
 export interface CreateAccountDto {

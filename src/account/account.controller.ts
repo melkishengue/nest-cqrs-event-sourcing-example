@@ -43,12 +43,13 @@ export class AccountController {
 
   @Post('/:id/debit')
   async debitAccount(@Param('id') accountId: string, @Body() debitAccountDto: DebitAccountDto) {
-    const { userId, receiverAccountId, money } = debitAccountDto;
+    const { userId, receiverAccountId, money, receiverUserId } = debitAccountDto;
     return this.commandBus.execute(
       new DebitAccountCommand(
         Id.fromString(userId),
         Id.fromString(accountId),
         Id.fromString(receiverAccountId),
+        Id.fromString(receiverUserId),
         Money.fromDto(money)));
   }
 

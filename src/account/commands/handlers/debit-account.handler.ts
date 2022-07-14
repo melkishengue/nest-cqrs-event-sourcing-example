@@ -15,6 +15,7 @@ export class DebitAccountHandler
   async execute(command: DebitAccountCommand) {
     const { userId, accountId, money, receiverAccountId } = command;
     const replayedAccount = this.repository.findOneById(accountId, userId);
+    const receivingReplayedAccount = this.repository.findOneById(receiverAccountId, receiverAccountId);
 
     if (!replayedAccount) {
       this.logger.error(`Account ${accountId} does not exist`);
@@ -24,7 +25,7 @@ export class DebitAccountHandler
     const account = this.publisher.mergeObjectContext(
       replayedAccount
     );
-    account.debitAccount(receiverAccountId, money);
+    account.debitAccount(receivingReplayedAccount, money);
     account.commit();
 
     return account;
