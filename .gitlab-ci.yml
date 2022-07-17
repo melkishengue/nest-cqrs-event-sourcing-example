@@ -1,0 +1,4 @@
+hello-world:
+  script:
+    - echo "My first gitlab pipeline" > file.txt
+    - cat file.txt
