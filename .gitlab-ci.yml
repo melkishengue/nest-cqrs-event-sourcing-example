@@ -1,4 +1,22 @@
-hello-world:
+stages:
+  - test
+  - build
+  - deploy
+
+test application:
+  stage: test
+  script:
+    - echo "My first gitlab pipeline!" > file.txt
+    - cat file.txt
+
+build application:
+  stage: build
+  script:
+    - echo "My first gitlab pipeline!" > file.txt
+    - cat file.txt
+
+deploy application:
+  stage: deploy
   script:
     - echo "My first gitlab pipeline!" > file.txt
     - cat file.txt
