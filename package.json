@@ -4,7 +4,8 @@
   "description": "Nest CQRS module usage example",
   "license": "MIT",
   "scripts": {
-    "start": "nest start --watch"
+    "dev": "nest start --watch",
+    "start": "nest start"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",

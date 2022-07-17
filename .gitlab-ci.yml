@@ -9,7 +9,7 @@ test application:
   stage: test
   script:
     - npm install
-    - npm start
+    # - npm start
     - apk update
     - apk add curl
     - curl https://jsonplaceholder.typicode.com/users
