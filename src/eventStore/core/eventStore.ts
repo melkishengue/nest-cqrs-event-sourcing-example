@@ -73,7 +73,6 @@ export class EventStore implements OnModuleInit {
   }
 
   getAllEvents(handler: EventStoreEventHandler) {
-    const data = readFileSync(this.DB_PATH, 'utf-8');
     const streams = this.loadDataFromFile();
     streams.forEach(stream => handler.handle(stream));
   }
