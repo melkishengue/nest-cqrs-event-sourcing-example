@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { EventStore } from '../../../eventStore/core/eventStore';
-import { AccountCreditedEvent } from '../impl/account-Credited.event';
+import { AccountCreditedEvent } from '../impl/account-credited.event';
 
 @EventsHandler(AccountCreditedEvent)
 export class AccountCreditedHandler implements IEventHandler<AccountCreditedEvent> {
