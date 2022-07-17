@@ -3,7 +3,7 @@ stages:
   - build
   - deploy
 
-image: node:16.13.2-alpine
+# image: node:16.13.2-alpine
 
 test application:
   stage: test
