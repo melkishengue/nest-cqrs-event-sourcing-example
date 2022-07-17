@@ -3,9 +3,12 @@ stages:
   - build
   - deploy
 
+image: node:16.13.2-alpine
+
 test application:
   stage: test
   script:
+    - npm install
     - echo "My first gitlab pipeline!" > file.txt
     - cat file.txt
 
