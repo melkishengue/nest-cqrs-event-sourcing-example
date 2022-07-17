@@ -3,14 +3,16 @@ stages:
   - build
   - deploy
 
-# image: node:16.13.2-alpine
+image: node:16.13.2-alpine
 
 test application:
   stage: test
   script:
     - npm install
-    - echo "My first gitlab pipeline!" > file.txt
-    - cat file.txt
+    - npm start
+    - apk update
+    - apk add curl
+    - curl https://jsonplaceholder.typicode.com/users
 
 build application:
   stage: build
