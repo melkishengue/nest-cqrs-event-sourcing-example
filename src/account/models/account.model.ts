@@ -45,7 +45,7 @@ export class Account extends AccountAggregateRoot {
     }
 
     if (balance && balance.getAmount() < 0) {
-      throw new BadRequestException(`Cannot set balance to negative value`);
+      throw new BadRequestException('Cannot set balance to negative value');
     }
 
     this.apply(new AccountUpdatedEvent(

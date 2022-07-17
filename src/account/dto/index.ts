@@ -1,7 +1,8 @@
 import { Currency } from "../value-objects";
 
 export interface MoneyDto {
-  amount: number, currency: Currency
+  amount: number,
+  currency: Currency
 }
 
 export interface DebitAccountDto {

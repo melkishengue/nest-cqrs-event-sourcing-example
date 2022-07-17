@@ -10,6 +10,10 @@
             "operations": [
                 {
                     "type": "BALANCE_UPDATE",
+                    "amount": {
+                        "amount": 500000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "XAF",
                         "amount": 500000
@@ -19,6 +23,10 @@
                 },
                 {
                     "type": "WITHDRAWAL",
+                    "amount": {
+                        "amount": 60000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "XAF",
                         "amount": 440000
@@ -28,6 +36,10 @@
                 },
                 {
                     "type": "WITHDRAWAL",
+                    "amount": {
+                        "amount": 60000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "XAF",
                         "amount": 380000
@@ -35,7 +47,8 @@
                     "date": "2022-07-10T16:50:05.109Z",
                     "receiverId": "f490a70a-4495-4355-a26c-71a534f54cda"
                 }
-            ]
+            ],
+            "isDeleted": true
         },
         {
             "accountId": "f490a70a-4495-4355-a26c-71a534f54cda",
@@ -47,13 +60,18 @@
             "operations": [
                 {
                     "type": "DEPOSIT",
+                    "amount": {
+                        "amount": 60000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "EUR",
                         "amount": 542.3076923076923
                     },
                     "date": "2022-07-10T16:50:06.112Z"
                 }
-            ]
+            ],
+            "isDeleted": false
         },
         {
             "accountId": "7a7714c3-8262-4cb5-8954-f9f0b2e9481c",
@@ -62,7 +80,8 @@
                 "currency": "USD"
             },
             "creationDate": "2022-07-10T16:37:43.674Z",
-            "operations": []
+            "operations": [],
+            "isDeleted": false
         },
         {
             "accountId": "0c1f7d57-1d83-4d25-ab01-45ad90af18f1",
@@ -74,6 +93,10 @@
             "operations": [
                 {
                     "type": "WITHDRAWAL",
+                    "amount": {
+                        "amount": 1000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "USD",
                         "amount": 8
@@ -83,6 +106,10 @@
                 },
                 {
                     "type": "WITHDRAWAL",
+                    "amount": {
+                        "amount": 1000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "USD",
                         "amount": 6
@@ -92,6 +119,10 @@
                 },
                 {
                     "type": "WITHDRAWAL",
+                    "amount": {
+                        "amount": 1000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "USD",
                         "amount": 4
@@ -101,6 +132,10 @@
                 },
                 {
                     "type": "WITHDRAWAL",
+                    "amount": {
+                        "amount": 1000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "USD",
                         "amount": 2
@@ -110,6 +145,10 @@
                 },
                 {
                     "type": "BALANCE_UPDATE",
+                    "amount": {
+                        "amount": 500000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "XAF",
                         "amount": 500000
@@ -119,6 +158,10 @@
                 },
                 {
                     "type": "BALANCE_UPDATE",
+                    "amount": {
+                        "amount": 5000,
+                        "currency": "USD"
+                    },
                     "newBalance": {
                         "currency": "USD",
                         "amount": 5000
@@ -135,18 +178,23 @@
                     "date": "2022-07-12T00:26:03.093Z",
                     "senderId": "-"
                 }
-            ]
+            ],
+            "isDeleted": false
         },
         {
             "accountId": "eceb135c-8207-46ac-bb83-b778507b9904",
             "balance": {
                 "currency": "USD",
-                "amount": 18
+                "amount": 22
             },
             "creationDate": "2022-07-11T21:32:06.906Z",
             "operations": [
                 {
                     "type": "DEPOSIT",
+                    "amount": {
+                        "amount": 1000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "USD",
                         "amount": 12
@@ -155,6 +203,10 @@
                 },
                 {
                     "type": "DEPOSIT",
+                    "amount": {
+                        "amount": 1000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "USD",
                         "amount": 14
@@ -163,6 +215,10 @@
                 },
                 {
                     "type": "DEPOSIT",
+                    "amount": {
+                        "amount": 1000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "USD",
                         "amount": 16
@@ -172,14 +228,32 @@
                 },
                 {
                     "type": "DEPOSIT",
+                    "amount": {
+                        "amount": 1000,
+                        "currency": "XAF"
+                    },
                     "newBalance": {
                         "currency": "USD",
                         "amount": 18
                     },
                     "date": "2022-07-11T22:56:18.843Z",
                     "senderId": "0c1f7d57-1d83-4d25-ab01-45ad90af18f1"
+                },
+                {
+                    "type": "DEPOSIT",
+                    "amount": {
+                        "amount": 2000,
+                        "currency": "XAF"
+                    },
+                    "newBalance": {
+                        "currency": "USD",
+                        "amount": 22
+                    },
+                    "date": "2022-07-12T19:47:17.347Z",
+                    "senderId": "af74d3bb-f875-4587-a057-22eb4eeaf615"
                 }
-            ]
+            ],
+            "isDeleted": false
         },
         {
             "accountId": "9e19a627-5144-46a6-97c0-f25f28b5ba79",
@@ -197,8 +271,61 @@
                     },
                     "date": "2022-07-12T01:05:19.077Z",
                     "senderId": "-"
+                },
+                {
+                    "type": "BALANCE_UPDATE",
+                    "newBalance": {
+                        "currency": "EUR",
+                        "amount": 9.6
+                    },
+                    "date": "2022-07-12T01:48:38.178Z",
+                    "senderId": "-"
                 }
-            ]
+            ],
+            "isDeleted": false
+        },
+        {
+            "accountId": "89769b3a-b2cb-428b-b489-3fe195e875f9",
+            "balance": {
+                "amount": 10,
+                "currency": "USD"
+            },
+            "creationDate": "2022-07-12T01:48:28.778Z",
+            "operations": [],
+            "isDeleted": false
+        },
+        {
+            "accountId": "af74d3bb-f875-4587-a057-22eb4eeaf615",
+            "balance": {
+                "currency": "USD",
+                "amount": 32.4
+            },
+            "creationDate": "2022-07-12T19:44:53.426Z",
+            "operations": [
+                {
+                    "type": "BALANCE_UPDATE",
+                    "newBalance": {
+                        "currency": "USD",
+                        "amount": 36.4
+                    },
+                    "date": "2022-07-12T19:46:06.499Z",
+                    "senderId": "-"
+                },
+                {
+                    "type": "WITHDRAWAL",
+                    "amount": {
+                        "amount": 2000,
+                        "currency": "XAF"
+                    },
+                    "newBalance": {
+                        "currency": "USD",
+                        "amount": 32.4
+                    },
+                    "date": "2022-07-12T19:47:16.340Z",
+                    "receiverId": "eceb135c-8207-46ac-bb83-b778507b9904"
+                }
+            ],
+            "isDeleted": true
         }
     ]
 }

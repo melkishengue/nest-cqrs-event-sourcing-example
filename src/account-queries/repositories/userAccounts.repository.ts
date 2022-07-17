@@ -36,7 +36,7 @@ export class UserAccountRepository implements OnModuleInit {
   }
 
   // performs an upsert
-  save(userId: string, userAccount: UserAccount): void {
+  save(userId: string, userAccount: UserAccount) {
     if (!this.userAccounts[userId]) {
       this.userAccounts[userId] = [];
     }
@@ -60,7 +60,7 @@ export class UserAccountRepository implements OnModuleInit {
       .find(account => ((account.accountId === accountId) && !account.isDeleted));
   }
 
-  delete(userId: string, accountId: string): void {
+  delete(userId: string, accountId: string) {
     const accounts = this.userAccounts[userId];
 
     if (!accounts || accounts.length === 0) {
@@ -80,16 +80,16 @@ export class UserAccountRepository implements OnModuleInit {
       });
   }
 
-  getAccounts(userId: string):  UserAccount[] {
+  getAccounts(userId: string): UserAccount[] {
     return this.userAccounts[userId].filter(account => !account.isDeleted);
   }
 
-  getAccount(userId: string, accountId):  UserAccount {
+  getAccount(userId: string, accountId): UserAccount {
     return this.userAccounts[userId]
       .find(account => ((account.accountId === accountId) && !account.isDeleted));
   }
 
-  flushIntoDatabaseFile(): void {
+  flushIntoDatabaseFile() {
     // 🖕 event-loop
     writeFileSync(this.DB_PATH, JSON.stringify(this.userAccounts, null, 4));
   }

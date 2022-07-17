@@ -117,7 +117,7 @@ export class UserAccountsProjection implements EventStoreEventHandler {
   }
 
   handleAccountDebitedEvent(event: EnhancedDomainEvent<AccountDebitedEvent>): void {
-    const { accountId, userId, money, creationDate, receiverAccountId} = event.event;
+    const { accountId, userId, money, creationDate, receiverAccountId } = event.event;
     const account = this.userAccountRepo.findOneById(userId, accountId);
     const currentBalance = Money
       .fromDto(account.balance as MoneyDto)

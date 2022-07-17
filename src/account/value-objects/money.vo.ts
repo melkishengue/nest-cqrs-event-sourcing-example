@@ -1,7 +1,9 @@
 import { MoneyDto } from "../dto";
 
 export enum Currency {
-  Fcfa = 'XAF', Euro = 'EUR', Dollar = 'USD'
+  Fcfa = 'XAF',
+  Euro = 'EUR',
+  Dollar = 'USD'
 }
 
 export class Money {
@@ -100,29 +102,30 @@ export class Money {
 
   static toDto(money: Money): MoneyDto {
     return {
-      amount: money.amount,
-      currency: money.currency,
+      amount: money.getAmount(),
+      currency: money.getCurrency(),
     }
   }
 
   static convertToCurrency(money: Money, destinationCurrency: Currency): Money {
+    if (!(Object.values(Currency).includes(destinationCurrency))) {
+      throw new Error(`Tried to convert into unknown currency ${destinationCurrency}`);
+    }
+
     if (money.getCurrency() === destinationCurrency) {
       return Money.create(money.getAmount(), money.getCurrency());
     }
 
-    let convertedMoney: Money;
     if (destinationCurrency === Currency.Dollar) {
-      convertedMoney = money.toDollar();
+      return money.toDollar();
     }
 
     if (destinationCurrency === Currency.Fcfa) {
-      convertedMoney = money.toFcfa();
+      return money.toFcfa();
     }
 
     if (destinationCurrency === Currency.Euro) {
-      convertedMoney = money.toEuro();
+      return money.toEuro();
     }
-
-    return convertedMoney;
   }
 }

@@ -10,7 +10,6 @@ import {
   CreateAccountDto,
   DebitAccountDto,
   DeleteAccountDto,
-  GetAccountDto,
   UpdateAccountDto
 } from './dto';
 
@@ -19,7 +18,6 @@ import {
 export class AccountController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus,
   ) {}
 
   @Post('/')
