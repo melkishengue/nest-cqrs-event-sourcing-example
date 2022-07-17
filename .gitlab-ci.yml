@@ -14,7 +14,7 @@ test application:
 build application:
   stage: build
   script:
-    - echo "My first gitlab pipeline!" > file.txt
+    - echo "My first gitlab pipeline" > file.txt
     - cat file.txt
 
 deploy application:
