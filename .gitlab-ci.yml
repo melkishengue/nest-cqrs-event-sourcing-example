@@ -5,17 +5,21 @@ stages:
 
 image: node:16.13.2-alpine
 
+services:
+  - docker:20.10.16-dind
+
 test application:
   stage: test
   script:
     - npm install
     - npm run test
 
-build application:
+build-container:
   stage: build
   script:
-    - echo "My first gitlab pipeline" > file.txt
-    - cat file.txt
+    - docker build -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin
+    - docker push $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
 
 deploy application:
   stage: deploy
