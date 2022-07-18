@@ -5,9 +5,6 @@ stages:
 
 image: node:16.13.2-alpine
 
-services:
-  - docker:20.10.16-dind
-
 test application:
   stage: test
   script:
@@ -16,6 +13,8 @@ test application:
 
 build-container:
   stage: build
+  services:
+    - docker:20.10.16-dind
   script:
     - docker build -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin
