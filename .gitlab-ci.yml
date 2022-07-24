@@ -23,7 +23,18 @@ build-container:
     - docker info
     - echo $CI_REGISTRY_PASSWORD
     - echo $CI_REGISTRY_USER
-    - docker build -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
+    - >
+      docker build
+      --pull
+      --cache-from $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
+      --label "org.opencontainers.image.title=$CI_PROJECT_TITLE"
+      --label "org.opencontainers.image.url=$CI_PROJECT_URL"
+      --label "org.opencontainers.image.created=$CI_JOB_STARTED_AT"
+      --label "org.opencontainers.image.revision=$CI_COMMIT_SHA"
+      --label "org.opencontainers.image.version=$CI_COMMIT_REF_NAME"
+      --tag $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
+      
+    # - docker build -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
     - docker logout
     - echo -n $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
     - docker push $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
