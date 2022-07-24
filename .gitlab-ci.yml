@@ -3,13 +3,13 @@ stages:
   - build
   - deploy
 
-# image: node:16.13.2-alpine
 
-# test application:
-#   stage: test
-#   script:
-#     - npm install
-#     - npm run test
+test application:
+  image: node:16.13.2-alpine
+  stage: test
+  script:
+    - npm install
+    - npm test
 
 build-container:
   stage: build
