@@ -1,11 +1,12 @@
-stages:
-  - test
-  - build
-  - deploy
+# stages:
+#   - test
+#   - build
+#   - deploy
 
 test-application:
-  image: node:16.13.2-alpine
   stage: test
+  image: node:16.13.2-alpine
+  needs: []
   script:
     - npm install
     - npm test
@@ -34,6 +35,7 @@ build-container:
 
 deploy-application:
   stage: deploy
+  needs: ["build-container"]
   image: node:16-alpine3.15
   script:
     - apk add --update openssh-client bash
