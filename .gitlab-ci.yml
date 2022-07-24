@@ -44,8 +44,8 @@ deploy application:
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo "$SSH_KNOWN_HOSTS"
-    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - ssh-keyscan 127.0.0.1
+    - ssh-keyscan 127.0.0.1 >> ~/.ssh/known_hosts
     - ssh root@165.22.75.102 ls
 
     ##
