@@ -44,15 +44,9 @@ deploy application:
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo "Configuring known hosts based on the CI Variable `KNOWN_HOSTS`"
-    - |
-      [[ ! -z "$KNOWN_HOSTS" ]] && echo "$KNOWN_HOSTS" | xargs -n 1 -I '{}' ssh-keyscan '{}' >> ~/.ssh/known_hosts || echo "KNOWN_HOSTS not set"
-    - chmod 644 ~/.ssh/known_hosts
-    - cat ~/.ssh/known_hosts
-    # - ssh-keyscan 165.22.75.102
-    # - ssh-keyscan -T 240 165.22.75.102 >> ~/.ssh/known_hosts
-    # - ssh-keyscan -H '165.22.75.102' >> ~/.ssh/known_hosts
-    - ssh root@165.22.75.102 ls
+
+    # - ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=publickey $DEPLOY_USER@$DEPLOY_HOST "echo $CI_REGISTRY_PASSWORD | sudo docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY; sudo docker stack deploy --with-registry-auth --compose-file=docker-compose-$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG.yml ${CI_PROJECT_NAME}_$CI_COMMIT_REF_SLUG"
+    - ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=publickey $DEPLOY_USER@$DEPLOY_HOST
 
     ##
     ## Optionally, if you will be using any Git commands, set the user name and
