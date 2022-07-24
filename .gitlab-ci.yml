@@ -44,6 +44,7 @@ deploy application:
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
+    - ssh-keyscan gitlab.localhost
     - ssh-keyscan gitlab.localhost >> ~/.ssh/known_hosts
     - ssh root@165.22.75.102 ls
 
