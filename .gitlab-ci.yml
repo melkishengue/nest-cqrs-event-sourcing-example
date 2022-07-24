@@ -26,9 +26,10 @@ build-container:
     DOCKER_TLS_CERTDIR: ""
   script:
     - docker --version
-    - docker build -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
+    # - docker build -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
+    - docker logout
     - echo -n $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin
-    - docker push $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
+    # - docker push $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
     - echo "done!"
 
 deploy application:
