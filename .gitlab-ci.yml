@@ -44,7 +44,7 @@ deploy application:
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh root@10.114.0.2 ls
+    - ssh root@165.22.75.102 ls
 
     ##
     ## Optionally, if you will be using any Git commands, set the user name and
