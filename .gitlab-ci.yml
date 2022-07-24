@@ -27,7 +27,7 @@ build-container:
   script:
     - docker --version
     - docker build -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
-    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin
+    - echo -n $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin
     - docker push $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
     - echo "done!"
 
