@@ -40,7 +40,8 @@ deploy application:
     - apk add --update openssh-client bash
     - echo $SSH_PRIVATE_KEY
     - eval $(ssh-agent -s)
-    - bash -c 'ssh-add <(echo "$SSH_PRIVATE_KEY")'
+    # - bash -c 'ssh-add <(echo "$SSH_PRIVATE_KEY")'
+    - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh root@10.114.0.2 ls
