@@ -54,5 +54,5 @@ deploy-application:
       -o StrictHostKeyChecking=no
       -o PreferredAuthentications=publickey
       $DEPLOY_USER@$DEPLOY_HOST
-      "echo $CI_REGISTRY_PASSWORD | sudo docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY; docker pull $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG; docker stop $CI_COMMIT_REF_NAME || true && docker rm $CI_COMMIT_REF_NAME || true && docker run -p 3000:3000 --name $CI_COMMIT_REF_NAME -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG -d"
+      "echo $CI_REGISTRY_PASSWORD | sudo docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY; docker pull $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG; docker stop $CI_COMMIT_SHA || true && docker rm $CI_COMMIT_SHA || true && docker run -p 3000:3000 --name $CI_COMMIT_SHA -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG -d"
 
