@@ -34,7 +34,6 @@ build-container:
       --label "org.opencontainers.image.version=$CI_COMMIT_REF_NAME"
       --tag $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
       
-    # - docker build -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
     - docker logout
     - echo -n $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
     - docker push $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
@@ -49,4 +48,4 @@ deploy-application:
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=publickey $DEPLOY_USER@$DEPLOY_HOST "echo $CI_REGISTRY_PASSWORD | sudo docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY; docker pull $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG; docker run -p 3000:3000 -d -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG"
+    - ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=publickey $DEPLOY_USER@$DEPLOY_HOST "echo $CI_REGISTRY_PASSWORD | sudo docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY; docker pull $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG; docker stop $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG && docker rm $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG && docker run -p 3000:3000 -d -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG"
