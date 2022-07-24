@@ -15,7 +15,7 @@ build-container:
   stage: build
   services:
     - docker:20.10.16-dind
-  image: docker:stable
+  image: docker:20
   script:
     - docker --version
     - docker build -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
