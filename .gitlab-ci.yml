@@ -30,7 +30,7 @@ build-container:
     - docker build -t $DOCKER_HUB_REPO:$CI_COMMIT_SHA .
     - docker logout
     - echo -n $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
-    - docker push $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
+    - docker push $DOCKER_HUB_REPO:$CI_COMMIT_SHA
 
 deploy-application:
   stage: deploy
