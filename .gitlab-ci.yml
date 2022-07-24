@@ -47,6 +47,7 @@ deploy application:
     - echo "Configuring known hosts based on the CI Variable `KNOWN_HOSTS`"
     - |
       [[ ! -z "$KNOWN_HOSTS" ]] && echo "$KNOWN_HOSTS" | xargs -n 1 -I '{}' ssh-keyscan '{}' >> ~/.ssh/known_hosts || echo "KNOWN_HOSTS not set"
+    - chmod 644 ~/.ssh/known_hosts
     - cat ~/.ssh/known_hosts
     # - ssh-keyscan 165.22.75.102
     # - ssh-keyscan -T 240 165.22.75.102 >> ~/.ssh/known_hosts
