@@ -1,4 +1,4 @@
-.test-application:
+test-application:
   stage: test
   image: node:16.13.2-alpine
   needs: []
@@ -6,7 +6,7 @@
     - npm install
     - npm test
 
-.build-container:
+build-container:
   stage: build
   services:
    - name: docker:20.10.16-dind
