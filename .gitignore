@@ -18,3 +18,5 @@ npm-debug.log
 /.nyc_output
 
 events.json
+
+*.itermcolors

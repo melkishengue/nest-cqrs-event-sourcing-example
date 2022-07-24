@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Logger, MethodNotAllowedException } from '@nestjs/common';
+import { ForbiddenException, Logger, MethodNotAllowedException } from '@nestjs/common';
 import {
   AccountCreatedEvent,
   AccountCreditedEvent,
@@ -41,11 +41,11 @@ export class Account extends AccountAggregateRoot {
 
   updateAccount(accountId: Id, userId: Id, currency?: Currency, balance?: Money) {
     if (currency && !(Object.values(Currency).includes(currency))) {
-      throw new BadRequestException(`Unknown currency ${currency}`);
+      throw new MethodNotAllowedException(`Unknown currency ${currency}`);
     }
 
     if (balance && balance.getAmount() < 0) {
-      throw new BadRequestException('Cannot set balance to negative value');
+      throw new MethodNotAllowedException('Cannot set balance to negative value');
     }
 
     this.apply(new AccountUpdatedEvent(
@@ -58,7 +58,7 @@ export class Account extends AccountAggregateRoot {
 
   deleteAccount() {
     if (this.isDeleted) {
-      throw new BadRequestException(`Account ${this.id} has been deleted`);
+      throw new MethodNotAllowedException(`Account ${this.id.getValue()} has been deleted`);
     }
 
     this.apply(new AccountDeletedEvent(
