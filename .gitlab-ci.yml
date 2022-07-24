@@ -26,6 +26,8 @@ build-container:
     DOCKER_TLS_CERTDIR: ""
   script:
     - docker --version
+    - echo $CI_REGISTRY_PASSWORD
+    - echo $CI_REGISTRY_USER
     # - docker build -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
     - docker logout
     - echo -n $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
