@@ -4,14 +4,14 @@ stages:
   - deploy
 
 
-.test application:
+test application:
   image: node:16.13.2-alpine
   stage: test
   script:
     - npm install
     - npm test
 
-.build-container:
+build-container:
   stage: build
   services:
    - name: docker:20.10.16-dind
