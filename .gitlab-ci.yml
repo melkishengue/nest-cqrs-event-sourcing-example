@@ -38,6 +38,7 @@ deploy application:
   image: node:16-alpine3.15
   script:
     - apk add --update openssh-client bash
+    - echo $SSH_PRIVATE_KEY
     - eval $(ssh-agent -s)
     - bash -c 'ssh-add <(echo "$SSH_PRIVATE_KEY")'
     - mkdir -p ~/.ssh
