@@ -46,7 +46,7 @@ deploy application:
     - chmod 700 ~/.ssh
 
     # - ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=publickey $DEPLOY_USER@$DEPLOY_HOST "echo $CI_REGISTRY_PASSWORD | sudo docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY; sudo docker stack deploy --with-registry-auth --compose-file=docker-compose-$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG.yml ${CI_PROJECT_NAME}_$CI_COMMIT_REF_SLUG"
-    - ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=publickey $DEPLOY_USER@$DEPLOY_HOST "echo $CI_REGISTRY_PASSWORD | sudo docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY; docker ps"
+    - ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=publickey $DEPLOY_USER@$DEPLOY_HOST "echo $CI_REGISTRY_PASSWORD | sudo docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY; docker run -p 3000:3000 -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG"
 
     ##
     ## Optionally, if you will be using any Git commands, set the user name and
