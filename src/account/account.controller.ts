@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseFilters } from '@nestjs/common';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { CommandBus } from '@nestjs/cqrs';
 import { CreateAccountCommand } from './commands/impl/create-account.command';
 import { UpdateAccountCommand } from './commands/impl/update-account.command';
 import { DebitAccountCommand } from './commands/impl/debit-account.command';

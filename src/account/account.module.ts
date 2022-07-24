@@ -15,8 +15,8 @@ import { filters } from './filters';
     AccountRepository,
     ...CommandHandlers,
     ...EventHandlers,
+    ...filters,
     AccountSagas,
-    ...filters
   ],
 })
 export class AccountModule {}
