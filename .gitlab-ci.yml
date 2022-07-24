@@ -46,8 +46,8 @@ deploy application:
     - chmod 700 ~/.ssh
     - ssh-keyscan 165.22.75.102
     # - ssh-keyscan 165.22.75.102 >> ~/.ssh/known_hosts
-    - ssh-keyscan -H '165.22.75.102' >> ~/.ssh/known_hosts
-    # - echo "$KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    # - ssh-keyscan -H '165.22.75.102' >> ~/.ssh/known_hosts
+    - echo "165.22.75.102" >> ~/.ssh/known_hosts
     - ssh root@165.22.75.102 ls
 
     ##
