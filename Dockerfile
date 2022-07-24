@@ -12,10 +12,11 @@ RUN npm install
 # If you are building your code for production
 # RUN npm ci --only=production
 
-RUN npm install pm2@latest -g
-
 # Bundle app source
 COPY . .
+
+RUN npm install pm2@latest -g
+RUN npm run build
 
 EXPOSE 3000
 CMD [ "pm2", "start", "dist/main.js", "--name", "bankApp" ]
