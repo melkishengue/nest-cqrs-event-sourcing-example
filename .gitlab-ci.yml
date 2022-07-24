@@ -14,8 +14,16 @@ stages:
 build-container:
   stage: build
   services:
-    - docker:20.10.16-dind
+   - name: docker:20.10.16-dind
+     alias: dockerdaemon
   image: docker:20
+  variables:
+    # Tell docker CLI how to talk to Docker daemon.
+    DOCKER_HOST: tcp://dockerdaemon:2375/
+    # Use the overlayfs driver for improved performance.
+    DOCKER_DRIVER: overlay2
+    # Disable TLS since we're running inside local network.
+    DOCKER_TLS_CERTDIR: ""
   script:
     - docker --version
     - docker build -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
