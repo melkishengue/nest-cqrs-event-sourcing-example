@@ -4,7 +4,7 @@ stages:
   - deploy
 
 
-test application:
+.test application:
   image: node:16.13.2-alpine
   stage: test
   script:
@@ -42,6 +42,7 @@ deploy application:
     - bash -c 'ssh-add <(echo "$SSH_PRIVATE_KEY")'
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
+    - ssh root@10.114.0.2 ls
 
     ##
     ## Optionally, if you will be using any Git commands, set the user name and
