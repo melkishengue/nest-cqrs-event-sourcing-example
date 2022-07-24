@@ -19,4 +19,4 @@ RUN npm install pm2@latest -g
 RUN npm run build
 
 EXPOSE 3000
-CMD [ "pm2-runtime", "start", "dist/main.js", "--name", "bankApp", "--exp-backoff-restart-delay", "100" ]
+CMD [ "pm2-runtime", "restart", "dist/main.js", "--name", "bankApp" ]
