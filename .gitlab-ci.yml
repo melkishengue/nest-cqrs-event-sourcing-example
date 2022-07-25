@@ -19,6 +19,7 @@ build-container:
     DOCKER_DRIVER: overlay2
     # Disable TLS since we're running inside local network.
     DOCKER_TLS_CERTDIR: ""
+    TAG_NAME: $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
   script:
     - docker info
     - echo $CI_REGISTRY_PASSWORD
@@ -26,22 +27,24 @@ build-container:
     - >
       docker build
       --pull
-      --cache-from $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
+      --cache-from $TAG_NAME
       --label "org.opencontainers.image.title=$CI_PROJECT_TITLE"
       --label "org.opencontainers.image.url=$CI_PROJECT_URL"
       --label "org.opencontainers.image.created=$CI_JOB_STARTED_AT"
       --label "org.opencontainers.image.revision=$CI_COMMIT_SHA"
       --label "org.opencontainers.image.version=$CI_COMMIT_REF_NAME"
-      --tag $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG .
+      --tag $TAG_NAME .
       
     - docker logout
     - echo -n $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
-    - docker push $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
+    - docker push $TAG_NAME
 
 deploy-application:
   stage: deploy
   needs: ["build-container"]
   image: node:16-alpine3.15
+  variables:
+    TAG_NAME: $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
   script:
     - apk add --update openssh-client bash
     - eval $(ssh-agent -s)
@@ -53,5 +56,4 @@ deploy-application:
       -o StrictHostKeyChecking=no
       -o PreferredAuthentications=publickey
       $DEPLOY_USER@$DEPLOY_HOST
-      "echo $CI_REGISTRY_PASSWORD | sudo docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY; docker pull $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG; docker stop $CI_COMMIT_REF_NAME; docker rm $CI_COMMIT_REF_NAME; docker run -p 3000:3000 --name $CI_COMMIT_REF_NAME -d -t $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG"
-
+      "echo $CI_REGISTRY_PASSWORD | sudo docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY; docker pull $TAG_NAME; docker stop $CI_COMMIT_REF_NAME; docker rm $CI_COMMIT_REF_NAME; docker run -p 3000:3000 --name $CI_COMMIT_REF_NAME -d -t $TAG_NAME"

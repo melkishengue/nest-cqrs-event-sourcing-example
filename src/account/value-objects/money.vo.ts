@@ -39,11 +39,10 @@ export class Money {
   
   decreaseAmount(deltaMoney: Money): Money {
     if (!this.canBeDecreasedOf(deltaMoney)) {
-      throw new Error('There is not such a thing as negative money');
+      throw new Error('There is no such a thing as negative money');
     }
 
     let convertedMoney = Money.convertToCurrency(deltaMoney, this.currency);
-
     return Money.create(this.amount - convertedMoney.getAmount(), this.currency);
   }
 
