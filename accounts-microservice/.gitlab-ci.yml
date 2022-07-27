@@ -1,13 +1,9 @@
-check-should-run:
-  script: echo "Default text"
-  only:
-    changes:
-      - "**/*"
-
 test-application:
   stage: test
   image: node:16.13.2-alpine
-  needs: ['check-should-run']
+  only:
+    changes:
+      - "**/*"
   script:
     - npm install
     - npm test

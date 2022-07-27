@@ -2,14 +2,10 @@ stages:
   - test
   - auth
 
-check-should-run:
-  script: echo "Default text"
+small-test:
+  stage: auth
   only:
     changes:
       - "**/*"
-
-small-test:
-  stage: auth
-  needs: ['check-should-run']
   script:
     - echo "A simple test!"
