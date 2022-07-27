@@ -1,7 +1,12 @@
+check-should-run:
+  only:
+    changes:
+      - "**/*"
+
 test-application:
   stage: test
   image: node:16.13.2-alpine
-  needs: []
+  needs: ['check-should-run']
   script:
     - npm install
     - npm test
