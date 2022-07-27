@@ -1,4 +1,5 @@
 stages:
+  - test
   - auth
 
 check-should-run:
