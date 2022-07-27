@@ -1,3 +1,7 @@
+stages:
+  auth
+
 small-test:
+  stage: auth
   script:
     - echo "A simple test!"
