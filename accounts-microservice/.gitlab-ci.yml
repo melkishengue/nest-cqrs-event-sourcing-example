@@ -6,7 +6,7 @@ test-application:
       - "**/*"
   script:
     - npm install
-    - npm test
+    - npm t
 
 # build-container:
 #   stage: build
