@@ -5,8 +5,8 @@ import {
   AccountCreditFailedEvent, 
   AccountDebitedEvent
 } from '../events/impl';
-import { Currency, Id, Money } from '../value-objects/';
-import { AccountUpdatedEvent, AccountDeletedEvent } from '../events/impl/';
+import { Currency, Id, Money } from '../value-objects';
+import { AccountUpdatedEvent, AccountDeletedEvent } from '../events/impl';
 import { AccountAggregateRoot } from './accountAggregateRoot';
 
 export class Account extends AccountAggregateRoot {

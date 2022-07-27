@@ -1,5 +1,5 @@
 import { MoneyDto } from "../../dto";
-import { Currency } from "../../value-objects/";
+import { Currency } from "../../value-objects";
 
 export class AccountCreatedEvent {
   constructor(

@@ -1,0 +1,3 @@
+small-test:
+  script:
+    - echo "A simple test!"

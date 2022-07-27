@@ -4,7 +4,7 @@ import { CreateAccountCommand } from './commands/impl/create-account.command';
 import { UpdateAccountCommand } from './commands/impl/update-account.command';
 import { DebitAccountCommand } from './commands/impl/debit-account.command';
 import { DeleteAccountCommand } from './commands/impl/delete-account.command';
-import { Id, Money } from './value-objects/';
+import { Id, Money } from './value-objects';
 import { HttpExceptionFilter } from './filters';
 import {
   CreateAccountDto,

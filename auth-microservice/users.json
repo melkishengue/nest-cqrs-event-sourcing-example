@@ -1,0 +1,24 @@
+[
+    {
+        "id": "857e7f5b-8b3f-4e3e-a88a-e198eac6d982",
+        "email": "johndoe@yahoo.com",
+        "createdAt": "xxxx",
+        "password": "johndoe@"
+    },
+    {
+        "id": "a2640d89-e298-4b89-b38e-07ca48b1abc7",
+        "password": "johndoe@",
+        "createdAt": "2022-07-26T21:09:15.217Z"
+    },
+    {
+        "id": "48c1bcad-45ee-47b8-9b10-2b6c87b0064f",
+        "password": "johndoe@",
+        "createdAt": "2022-07-26T21:11:26.418Z"
+    },
+    {
+        "id": "85711439-2ba2-4aeb-b02c-a0ba4201e7db",
+        "email": "melkishengue",
+        "password": "johndoe@",
+        "createdAt": "2022-07-26T21:20:24.004Z"
+    }
+]
