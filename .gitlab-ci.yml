@@ -5,7 +5,7 @@ account:
     include: .sub-gitlab-ci.yml
     strategy: depend
 
-account:
+auth:
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "auth-microservice"
   trigger:
