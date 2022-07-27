@@ -1,4 +1,5 @@
 check-should-run:
+  script: echo "Default text"
   only:
     changes:
       - "**/*"
