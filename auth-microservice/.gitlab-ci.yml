@@ -1,5 +1,5 @@
 stages:
-  auth
+  - auth
 
 small-test:
   stage: auth
