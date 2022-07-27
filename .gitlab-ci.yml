@@ -1,3 +1,13 @@
-include:
-  - '/accounts-microservice/.gitlab-ci.yml'
-  - '/auth-microservice/.gitlab-ci.yml'
+account:
+  variables:
+    CHILD_PIPELINE_EXECUTION_CONTEXT: "accounts-microservice"
+  trigger:
+    include: .sub-gitlab-ci.yml
+    strategy: depend
+
+account:
+  variables:
+    CHILD_PIPELINE_EXECUTION_CONTEXT: "auth-microservice"
+  trigger:
+    include: .sub-gitlab-ci.yml
+    strategy: depend
