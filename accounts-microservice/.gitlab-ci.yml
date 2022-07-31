@@ -1,9 +1,9 @@
-test-application:
-  image: node:16.13.2-alpine
-  script:
-    - npm install
-    - npm test
+include: 
+  local: '../infra/.commons-gitlab-ci.yml'
 
+test-application:
+  extends: .test-node-app
+  
 build-application:
   needs: ["test-application"]
   services:

@@ -1,0 +1,5 @@
+.test-node-app:
+  image: node:16.13.2-alpine
+  script:
+    - npm install
+    - npm test
