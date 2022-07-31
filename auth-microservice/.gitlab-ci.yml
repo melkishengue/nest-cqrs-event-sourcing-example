@@ -1,6 +1,11 @@
+include: 
+  local: '/infra/.commons-gitlab-ci.yml'
+
 test-application:
-  stage: test
-  image: node:16.13.2-alpine
-  script:
-    - npm install
-    - npm test
+  extends: .test-node-app
+
+build-application:
+  needs: ["test-application"]
+  extends: .build-node-app
+  variables:
+    TAG_NAME: $DOCKER_HUB_REPO_AUTH:$CI_COMMIT_REF_SLUG
