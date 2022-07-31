@@ -5,8 +5,9 @@ test-application:
     - npm install
     - npm test
 
-build-container:
+build-application:
   stage: build
+  needs: ["test-application"]
   services:
    - name: docker:20.10.16-dind
      alias: dockerdaemon
