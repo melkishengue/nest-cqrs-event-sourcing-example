@@ -3,7 +3,7 @@ variables:
 
 .per-project-changes:
   rules:
-    changes:
+    - changes:
       - $RULES_CHANGES_PATH
 
 account:
