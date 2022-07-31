@@ -1,12 +1,10 @@
 test-application:
-  stage: test
   image: node:16.13.2-alpine
   script:
     - npm install
     - npm test
 
 build-application:
-  stage: build
   needs: ["test-application"]
   services:
    - name: docker:20.10.16-dind
