@@ -1,9 +1,6 @@
 test-application:
   stage: test
   image: node:16.13.2-alpine
-  only:
-    changes:
-      - "**/*"
   script:
     - npm install
     - npm t

@@ -1,50 +1,32 @@
 version: '3.8'
 
 services:
-  traefik:
-    image: "traefik:v2.6"
-    container_name: "traefik"
-    networks:
-      - bankApp-network
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
   auth:
+    container_name: auth
+    # image: auth:$TAG_NAME
     build:
-      context: ../auth-microservice
+      context: ./auth-microservice
     ports:
       - 4000:4000
     networks:
       - bankApp-network
     volumes:
-      - ../auth-microservice:/usr/src/app
+      - ./auth-microservice:/usr/src/app
       - /usr/src/app/node_modules
     restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.game.rule=Host(`auth-service`)"
 
   account:
+    container_name: account
     build:
-      context: ../accounts-microservice
+      context: ./accounts-microservice
     ports:
       - 3000:3000
     networks:
       - bankApp-network
     volumes:
-      - ../accounts-microservice:/usr/src/app
+      - ./accounts-microservice:/usr/src/app
       - /usr/src/app/node_modules
     restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.game.rule=Host(`accounts-service`)"
 
 networks:
   bankApp-network:

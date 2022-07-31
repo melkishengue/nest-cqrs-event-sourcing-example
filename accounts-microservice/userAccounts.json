@@ -326,6 +326,56 @@
                 }
             ],
             "isDeleted": true
+        },
+        {
+            "accountId": "0a7b7534-ad7f-4ef6-bee2-d21ebcda0daa",
+            "balance": {
+                "amount": 35,
+                "currency": "EUR"
+            },
+            "creationDate": "2022-07-31T16:50:15.277Z",
+            "operations": [],
+            "isDeleted": false
+        },
+        {
+            "accountId": "c9f8f529-9191-4ff2-b43a-c489c180e126",
+            "balance": {
+                "amount": 35,
+                "currency": "EUR"
+            },
+            "creationDate": "2022-07-31T16:50:37.195Z",
+            "operations": [],
+            "isDeleted": false
+        },
+        {
+            "accountId": "609f9566-5861-498f-82eb-a83476e3fe43",
+            "balance": {
+                "amount": 35,
+                "currency": "EUR"
+            },
+            "creationDate": "2022-07-31T18:59:10.864Z",
+            "operations": [],
+            "isDeleted": false
+        },
+        {
+            "accountId": "1160514f-a1a3-4bb6-a08e-9cd3a05b3370",
+            "balance": {
+                "amount": 35,
+                "currency": "EUR"
+            },
+            "creationDate": "2022-07-31T19:09:26.204Z",
+            "operations": [],
+            "isDeleted": false
+        },
+        {
+            "accountId": "2097fa89-3e36-4363-b646-2f124e7d0c8b",
+            "balance": {
+                "amount": 35,
+                "currency": "EUR"
+            },
+            "creationDate": "2022-07-31T19:10:22.889Z",
+            "operations": [],
+            "isDeleted": false
         }
     ]
 }

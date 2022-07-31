@@ -1,6 +1,15 @@
+variables:
+  RULES_CHANGES_PATH: "**/*"
+
+.per-project-changes:
+  rules:
+    changes:
+      - $RULES_CHANGES_PATH
+
 account:
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "accounts-microservice"
+    RULES_CHANGES_PATH: "accounts-microservice/**/*"
   trigger:
     include: .sub-gitlab-ci.yml
     strategy: depend
@@ -8,6 +17,7 @@ account:
 auth:
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "auth-microservice"
+    RULES_CHANGES_PATH: "auth-microservice/**/*"
   trigger:
     include: .sub-gitlab-ci.yml
     strategy: depend

@@ -1,11 +1,6 @@
-stages:
-  - test
-  - auth
-
-small-test:
-  stage: auth
-  only:
-    changes:
-      - "**/*"
+test-application:
+  stage: test
+  image: node:16.13.2-alpine
   script:
-    - echo "A simple test!"
+    - npm install
+    - npm t
