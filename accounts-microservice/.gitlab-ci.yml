@@ -10,7 +10,7 @@ variables:
 #   extends: .test-node-app
 
 build-application:
-  needs: ["test-application"]
+  # needs: ["test-application"]
   extends: .build-node-app
 
 deploy-application:
