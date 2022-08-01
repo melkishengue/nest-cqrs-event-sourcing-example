@@ -25,11 +25,11 @@
       docker build
       --pull
       --cache-from $TAG_NAME
-      --label "org.opencontainers.image.title=$CI_PROJECT_TITLE"
-      --label "org.opencontainers.image.url=$CI_PROJECT_URL"
-      --label "org.opencontainers.image.created=$CI_JOB_STARTED_AT"
-      --label "org.opencontainers.image.revision=$CI_COMMIT_SHA"
-      --label "org.opencontainers.image.version=$CI_COMMIT_REF_NAME"
+      --label "org.bankapp.image.title=$CI_PROJECT_TITLE"
+      --label "org.bankapp.image.url=$CI_PROJECT_URL"
+      --label "org.bankapp.image.created=$CI_JOB_STARTED_AT"
+      --label "org.bankapp.image.revision=$CI_COMMIT_SHA"
+      --label "org.bankapp.image.version=$CI_COMMIT_REF_NAME"
       --tag $TAG_NAME .
       
     - docker logout
