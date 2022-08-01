@@ -2,7 +2,7 @@ import { Injectable, Logger, OnModuleInit, BadRequestException } from '@nestjs/c
 import { v4 as uuid } from 'uuid';
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
-import { User } from '../entities/user.entity';
+import { ClientUser, User } from '../entities/user.entity';
 
 @Injectable()
 export class UserRepository implements OnModuleInit {
@@ -21,7 +21,7 @@ export class UserRepository implements OnModuleInit {
     return this.users.find(user => user.email === email);
   }
 
-  save(email: string, password: string): User | null {
+  save(email: string, password: string): ClientUser | null {
     const foundUser = this.users.find(user => user.email === email);
 
     if (foundUser) {
@@ -36,7 +36,8 @@ export class UserRepository implements OnModuleInit {
     );
 
     this.users.push(user);
-    return user;
+    const { password: p, ...allButPassword } = user;
+    return allButPassword;
   }
 
   loadDataFromFile(): User[] {

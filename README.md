@@ -36,7 +36,7 @@ curl --location --request POST 'localhost:4000/auth/login/' \
 }'
 
 ```
-This request return an auth token used to query the account microservice.
+This request includes an jwt token used to query the account microservice.
 The token is valid 1 hour.
 
 Response:
@@ -49,11 +49,11 @@ Response:
 ```
 
 ### Create an account:
-Replace `YOUR_AUTH_TOKEN` and `YOUR_USER_ID` with the corresponding values.
+Replace `YOUR_JWT_TOKEN` and `YOUR_USER_ID` with the corresponding values.
 
 ```
 curl --location --request POST 'localhost:3000/accounts/' \
---header 'Authorization: Bearer <YOUR_AUTH_TOKEN>' \
+--header 'Authorization: Bearer <YOUR_JWT_TOKEN>' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "userId": "<YOUR_USER_ID>",
@@ -65,10 +65,10 @@ curl --location --request POST 'localhost:3000/accounts/' \
 ```
 
 ### View all accounts for user:
-Replace `YOUR_AUTH_TOKEN` and `YOUR_USER_ID` with the corresponding values.
+Replace `YOUR_JWT_TOKEN` and `YOUR_USER_ID` with the corresponding values.
 ```
 curl --location --request GET 'localhost:3000/queries/users/<YOUR_USER_ID>' \
---header 'Authorization: Bearer <YOUR_AUTH_TOKEN>' \
+--header 'Authorization: Bearer <YOUR_JWT_TOKEN>' \
 --header 'Content-Type: application/json' \
 ```
 Response:
@@ -91,11 +91,11 @@ Response:
 
 ### Update an account:
 Update account to currency EUR.
-Replace `YOUR_AUTH_TOKEN`, `YOUR_ACCOUNT_ID` and `YOUR_USER_ID` with the corresponding values.
+Replace `YOUR_JWT_TOKEN`, `YOUR_ACCOUNT_ID` and `YOUR_USER_ID` with the corresponding values.
 ```
 curl --location --request PATCH 'localhost:3000/accounts/<YOUR_ACCOUNT_ID>' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <YOUR_AUTH_TOKEN>' \
+--header 'Authorization: Bearer <YOUR_JWT_TOKEN>' \
 --data-raw '{
     "userId": "<YOUR_USER_ID>",
     "currency": "EUR"
@@ -104,11 +104,11 @@ curl --location --request PATCH 'localhost:3000/accounts/<YOUR_ACCOUNT_ID>' \
 
 ### Transfer from one account to another:
 Transfer 100EUR (first create second accound like previously and use id in `receiverAccountId` field).
-Replace `YOUR_AUTH_TOKEN`, `YOUR_ACCOUNT_ID`, `ANOTHER_ACCOUNT_ID` and `YOUR_USER_ID` with the corresponding values.
+Replace `YOUR_JWT_TOKEN`, `YOUR_ACCOUNT_ID`, `ANOTHER_ACCOUNT_ID` and `YOUR_USER_ID` with the corresponding values.
 ```
 curl --location --request POST 'localhost:3000/accounts/<YOUR_ACCOUNT_ID>/debit' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <YOUR_AUTH_TOKEN>' \
+--header 'Authorization: Bearer <YOUR_JWT_TOKEN>' \
 --data-raw '{
     "userId": "<YOUR_USER_ID>",
     "receiverAccountId": "<ANOTHER_ACCOUNT_ID>",
@@ -118,7 +118,7 @@ curl --location --request POST 'localhost:3000/accounts/<YOUR_ACCOUNT_ID>/debit'
 ```
 
 ### Delete account:
-Replace `YOUR_AUTH_TOKEN`, `YOUR_ACCOUNT_ID`, `ANOTHER_ACCOUNT_ID` and `YOUR_USER_ID` with the corresponding values.
+Replace `YOUR_JWT_TOKEN`, `YOUR_ACCOUNT_ID`, `ANOTHER_ACCOUNT_ID` and `YOUR_USER_ID` with the corresponding values.
 ```
 curl --location --request DELETE 'localhost:3000/accounts/<YOUR_ACCOUNT_ID>' \
 --header 'Content-Type: application/json' \

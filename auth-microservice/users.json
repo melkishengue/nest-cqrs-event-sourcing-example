@@ -20,5 +20,17 @@
         "email": "melkishengue",
         "password": "johndoe@",
         "createdAt": "2022-07-26T21:20:24.004Z"
+    },
+    {
+        "id": "736822e3-8116-4697-a3f4-d71fbdb4ecc4",
+        "email": "melkishengue1",
+        "password": "johndoe@",
+        "createdAt": "2022-08-01T19:11:11.981Z"
+    },
+    {
+        "id": "d4f66dd4-ddb5-4b92-a74e-dcfba0658e21",
+        "email": "melkishengue2",
+        "password": "johndoe@",
+        "createdAt": "2022-08-01T19:12:07.266Z"
     }
 ]
