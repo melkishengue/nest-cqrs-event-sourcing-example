@@ -4,15 +4,15 @@ include:
 variables:
   TAG_NAME: $DOCKER_HUB_REPO_ACCOUNT:$CI_COMMIT_REF_SLUG
 
-# test-application:
-#   extends: .test-node-app
+test-application:
+  extends: .test-node-app
 
-# build-application:
-#   needs: ["test-application"]
-#   extends: .build-node-app
+build-application:
+  needs: ["test-application"]
+  extends: .build-node-app
 
 deploy-application:
-  # needs: ["build-application"]
+  needs: ["build-application"]
   image:
     name: bitnami/kubectl:latest
     entrypoint: [""]
@@ -30,22 +30,3 @@ deploy-application:
     - kubectl --kubeconfig=$KUBECONFIG_FILE get pods
     - kubectl --kubeconfig=$KUBECONFIG_FILE get services
     - kubectl --kubeconfig=$KUBECONFIG_FILE get nodes
-
-# deploy-application:
-#   stage: deploy
-#   needs: ["build-container"]
-#   image: node:16-alpine3.15
-#   variables:
-#     TAG_NAME: $DOCKER_HUB_REPO:$CI_COMMIT_REF_SLUG
-#   script:
-#     - apk add --update openssh-client bash
-#     - eval $(ssh-agent -s)
-#     - echo "$SSH_PRIVATE_KEY" | ssh-add -
-#     - mkdir -p ~/.ssh
-#     - chmod 700 ~/.ssh
-#     - >
-#       ssh
-#       -o StrictHostKeyChecking=no
-#       -o PreferredAuthentications=publickey
-#       $DEPLOY_USER@$DEPLOY_HOST
-#       "echo $CI_REGISTRY_PASSWORD | sudo docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY; docker pull $TAG_NAME; docker stop $CI_COMMIT_REF_NAME; docker rm $CI_COMMIT_REF_NAME; docker run -p 3000:3000 --name $CI_COMMIT_REF_NAME -d -t $TAG_NAME"

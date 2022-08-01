@@ -7,7 +7,7 @@ import { JwtAuthGuard } from './auth/guards/';
 import { JwtStrategy } from './auth/strategies';
 import { EventStoreModule } from './eventStore/eventStore.module';
 import { jwtConstants } from './auth/constants';
-
+import { AppController } from './app.controller';
 @Module({
   imports: [
     AccountModule,
@@ -22,6 +22,9 @@ import { jwtConstants } from './auth/constants';
   providers: [
     JwtAuthGuard,
     JwtStrategy
+  ],
+  controllers: [
+    AppController
   ]
 })
 export class AppModule {}
