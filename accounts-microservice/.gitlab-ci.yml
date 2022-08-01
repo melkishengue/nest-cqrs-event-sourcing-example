@@ -1,5 +1,5 @@
 include: 
-  local: '/infra/.commons-gitlab-ci.yml'
+  local: '/.commons-gitlab-ci.yml'
 
 variables:
   TAG_NAME: $DOCKER_HUB_REPO_ACCOUNT:$CI_COMMIT_REF_SLUG$CI_COMMIT_SHORT_SHA
