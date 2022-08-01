@@ -27,6 +27,7 @@ deploy-application:
     # - sed -e "s/TAG_NAME/$TAG_NAME/ig" <input-file>
     # - sudo apt-get install gettext-base
     - sed -i "s/<TAG_NAME>/test/g" deployment.yaml
+    - cat deployment.yaml
 
 # deploy-application:
 #   stage: deploy
