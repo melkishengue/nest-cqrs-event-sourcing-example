@@ -25,7 +25,7 @@ deploy-application:
     - kubectl --kubeconfig=$KUBECONFIG_FILE config current-context
     - kubectl --kubeconfig=$KUBECONFIG_FILE cluster-info
     # - sed -e "s/TAG_NAME/$TAG_NAME/ig" <input-file>
-    - apt-get install gettext-base
+    - sudo apt-get install gettext-base
 
 # deploy-application:
 #   stage: deploy
