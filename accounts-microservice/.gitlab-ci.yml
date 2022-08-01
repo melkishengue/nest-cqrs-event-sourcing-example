@@ -27,6 +27,7 @@ deploy-application:
     - sed -i "s#<TAG_NAME>#$TAG_NAME#g" deployment.yaml
     - cat deployment.yaml
     - kubectl --kubeconfig=$KUBECONFIG_FILE apply -f deployment.yaml
+    - kubectl --kubeconfig=$KUBECONFIG_FILE apply get pods
 
 # deploy-application:
 #   stage: deploy
