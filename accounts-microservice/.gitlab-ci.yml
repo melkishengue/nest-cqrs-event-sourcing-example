@@ -1,14 +1,15 @@
 include: 
   local: '/infra/.commons-gitlab-ci.yml'
 
+variables:
+  TAG_NAME: $DOCKER_HUB_REPO_ACCOUNT:$CI_COMMIT_REF_SLUG
+
 # test-application:
 #   extends: .test-node-app
 
 # build-application:
 #   needs: ["test-application"]
 #   extends: .build-node-app
-#   variables:
-#     TAG_NAME: $DOCKER_HUB_REPO_ACCOUNT:$CI_COMMIT_REF_SLUG
 
 deploy-application:
   # needs: ["build-application"]
@@ -23,8 +24,8 @@ deploy-application:
     - kubectl --kubeconfig=$KUBECONFIG_FILE config get-contexts
     - kubectl --kubeconfig=$KUBECONFIG_FILE config current-context
     - kubectl --kubeconfig=$KUBECONFIG_FILE cluster-info
-
-# doctl kubernetes cluster kubeconfig save a62d0732-421c-41df-a224-4597a4ea8da1 
+    # - sed -e "s/TAG_NAME/$TAG_NAME/ig" <input-file>
+    - apt-get install gettext-base
 
 # deploy-application:
 #   stage: deploy

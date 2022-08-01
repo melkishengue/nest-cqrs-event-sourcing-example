@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
         - name: auth-microservice
-          image: auth-microservice
+          image: {{TAG_NAME}}
           imagePullPolicy: Never
           ports:
             - containerPort: 4000
