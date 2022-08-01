@@ -18,9 +18,9 @@ deploy-application:
   script:
     - cat $KUBECONFIG_FILE
     - kubectl --kubeconfig=$KUBECONFIG_FILE get nodes
-    - kubectl config view
-    - kubectl config get-contexts
-    - kubectl config current-context
+    - kubectl --kubeconfig=$KUBECONFIG_FILE config view
+    - kubectl --kubeconfig=$KUBECONFIG_FILE config get-contexts
+    - kubectl --kubeconfig=$KUBECONFIG_FILE config current-context
 
 # doctl kubernetes cluster kubeconfig save a62d0732-421c-41df-a224-4597a4ea8da1 
 
