@@ -35,3 +35,24 @@
     - docker logout
     - echo -n $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
     - docker push $TAG_NAME
+
+.deploy-node-app:
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+  script:
+    - echo $KUBECONFIG_FILE
+    - cat $KUBECONFIG_FILE
+    - kubectl --kubeconfig=$KUBECONFIG_FILE get nodes
+    - kubectl --kubeconfig=$KUBECONFIG_FILE config view
+    - kubectl --kubeconfig=$KUBECONFIG_FILE config get-contexts
+    - kubectl --kubeconfig=$KUBECONFIG_FILE config current-context
+    - kubectl --kubeconfig=$KUBECONFIG_FILE cluster-info
+    - sed -i "s#<TAG_NAME>#$TAG_NAME#g" deployment.yaml
+    - sed -i "s#<APP_NAME>#$APP_NAME#g" deployment.yaml
+    - sed -i "s#<APP_PORT>#$PORT#g" deployment.yaml
+    - cat deployment.yaml
+    - kubectl --kubeconfig=$KUBECONFIG_FILE apply -f deployment.yaml
+    - kubectl --kubeconfig=$KUBECONFIG_FILE get pods
+    - kubectl --kubeconfig=$KUBECONFIG_FILE get services
+    - kubectl --kubeconfig=$KUBECONFIG_FILE get nodes

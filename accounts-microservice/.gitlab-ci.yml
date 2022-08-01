@@ -3,30 +3,16 @@ include:
 
 variables:
   TAG_NAME: $DOCKER_HUB_REPO_ACCOUNT:$CI_COMMIT_REF_SLUG
+  APP_NAME: accounts-microservice
+  PORT: 3000
 
-test-application:
-  extends: .test-node-app
+# test-application:
+#   extends: .test-node-app
 
-build-application:
-  needs: ["test-application"]
-  extends: .build-node-app
+# build-application:
+#   needs: ["test-application"]
+#   extends: .build-node-app
 
 deploy-application:
-  needs: ["build-application"]
-  image:
-    name: bitnami/kubectl:latest
-    entrypoint: [""]
-  script:
-    - echo $KUBECONFIG_FILE
-    - cat $KUBECONFIG_FILE
-    - kubectl --kubeconfig=$KUBECONFIG_FILE get nodes
-    - kubectl --kubeconfig=$KUBECONFIG_FILE config view
-    - kubectl --kubeconfig=$KUBECONFIG_FILE config get-contexts
-    - kubectl --kubeconfig=$KUBECONFIG_FILE config current-context
-    - kubectl --kubeconfig=$KUBECONFIG_FILE cluster-info
-    - sed -i "s#<TAG_NAME>#$TAG_NAME#g" deployment.yaml
-    - cat deployment.yaml
-    - kubectl --kubeconfig=$KUBECONFIG_FILE apply -f deployment.yaml
-    - kubectl --kubeconfig=$KUBECONFIG_FILE get pods
-    - kubectl --kubeconfig=$KUBECONFIG_FILE get services
-    - kubectl --kubeconfig=$KUBECONFIG_FILE get nodes
+  # needs: ["build-application"]
+  extends: .deploy-node-app
