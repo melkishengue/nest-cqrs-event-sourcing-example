@@ -28,6 +28,6 @@ spec:
       containers:
         - name: accounts-microservice
           image: <TAG_NAME>
-          # imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
