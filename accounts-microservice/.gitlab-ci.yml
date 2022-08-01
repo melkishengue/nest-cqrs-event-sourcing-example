@@ -12,15 +12,18 @@ include:
 
 deploy-application:
   # needs: ["build-application"]
+  variables:
+    KUBECTL: 'kubectl --kubeconfig=$KUBECONFIG_FILE'
   image:
     name: bitnami/kubectl:latest
     entrypoint: [""]
   script:
     - cat $KUBECONFIG_FILE
-    - kubectl --kubeconfig=$KUBECONFIG_FILE get nodes
-    - kubectl --kubeconfig=$KUBECONFIG_FILE config view
-    - kubectl --kubeconfig=$KUBECONFIG_FILE config get-contexts
-    - kubectl --kubeconfig=$KUBECONFIG_FILE config current-context
+    - $KUBECTL get nodes
+    - $KUBECTL config view
+    - $KUBECTL config get-contexts
+    - $KUBECTL config current-context
+    - $KUBECTL cluster-info
 
 # doctl kubernetes cluster kubeconfig save a62d0732-421c-41df-a224-4597a4ea8da1 
 
