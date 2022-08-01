@@ -12,7 +12,9 @@ include:
 
 deploy-application:
   # needs: ["build-application"]
-  image: bitnami/kubectl:latest
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
   script:
     - cat $KUBECONFIG_FILE
     - kubectl --kubeconfig=$KUBECONFIG_FILE get nodes
