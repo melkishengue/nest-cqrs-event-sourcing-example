@@ -15,9 +15,9 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-RUN npm install pm2@latest -g
+# RUN npm install pm2@latest -g
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE 4000
 # CMD [ "pm2-runtime", "start", "dist/main.js", "--name", "auth-ms" ]
 CMD [ "npm", "run", "dev" ]

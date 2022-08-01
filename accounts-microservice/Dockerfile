@@ -15,7 +15,7 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-RUN npm install pm2@latest -g
+# RUN npm install pm2@latest -g
 RUN npm run build
 
 EXPOSE 3000

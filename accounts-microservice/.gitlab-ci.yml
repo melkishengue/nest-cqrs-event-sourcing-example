@@ -6,13 +6,13 @@ variables:
   APP_NAME: accounts-microservice
   PORT: 3000
 
-# test-application:
-#   extends: .test-node-app
+test-application:
+  extends: .test-node-app
 
-# build-application:
-#   needs: ["test-application"]
-#   extends: .build-node-app
+build-application:
+  needs: ["test-application"]
+  extends: .build-node-app
 
 deploy-application:
-  # needs: ["build-application"]
+  needs: ["build-application"]
   extends: .deploy-node-app
