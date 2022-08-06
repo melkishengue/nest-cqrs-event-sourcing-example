@@ -6,6 +6,7 @@ export class AccountCreditFailedEvent {
     public readonly accountId: string,
     public readonly receiverAccountId: string,
     public readonly money: MoneyDto,
+    public readonly reason: string,
     public readonly creationDate: string,
   ) {}
 

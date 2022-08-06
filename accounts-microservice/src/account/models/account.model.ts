@@ -92,23 +92,27 @@ export class Account extends AccountAggregateRoot {
     // transaction fails with 20% probability
     const transactionFailed = Math.random() < 0.2;
     if (transactionFailed) {
-      this.logger.error('Fund transfer failed. Transaction needs to be rollbacked');
+      const message = 'Fund transfer failed. Transaction needs to be rollbacked';
+      this.logger.error(message);
       this.apply(new AccountCreditFailedEvent(
         this.userId.getValue(),
         senderAccountId.getValue(),
         this.id.getValue(),
         Money.toDto(money),
+        message,
         (new Date()).toISOString()));
       return;
     }
       
     if (!this.isAccountActive()) {
-        this.logger.error(`Account ${this.id.getValue()} has been deleted`);
+      const message = `Account ${this.id.getValue()} has been deleted`;
+        this.logger.error(message);
         this.apply(new AccountCreditFailedEvent(
           this.userId.getValue(),
           senderAccountId.getValue(),
           this.id.getValue(),
           Money.toDto(money),
+          message,
           (new Date()).toISOString()));
       return;
     }

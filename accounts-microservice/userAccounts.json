@@ -376,6 +376,16 @@
             "creationDate": "2022-07-31T19:10:22.889Z",
             "operations": [],
             "isDeleted": false
+        },
+        {
+            "accountId": "00817cf9-e4e7-4769-b13a-71d56d7f956a",
+            "balance": {
+                "amount": 35,
+                "currency": "EUR"
+            },
+            "creationDate": "2022-08-05T21:30:38.236Z",
+            "operations": [],
+            "isDeleted": false
         }
     ]
 }

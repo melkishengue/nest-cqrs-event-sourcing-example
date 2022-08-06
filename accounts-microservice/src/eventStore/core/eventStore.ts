@@ -69,7 +69,7 @@ export class EventStore implements OnModuleInit {
     }
     
     this.handlers[eventType].push(handler);
-    this.logger.debug(`Subscribed to stream ${eventType}`);
+    this.logger.log(`Subscribed to stream ${eventType}`);
   }
 
   getAllEvents(handler: EventStoreEventHandler) {

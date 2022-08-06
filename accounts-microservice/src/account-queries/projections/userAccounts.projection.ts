@@ -8,7 +8,7 @@ import {
   AccountCreditedEvent,
   AccountDebitedEvent,
   AccountUpdatedEvent,
-  AccountDeletedEvent
+  AccountDeletedEvent,
 } from "../../account/events/impl";
 import { Money } from "../../account/value-objects";
 import { EnhancedDomainEvent, EventStore, EventStoreEventHandler } from "../../eventStore/core/eventStore";
@@ -35,6 +35,11 @@ export class UserAccountsProjection implements EventStoreEventHandler {
     this.createProjection();
   }
 
+  /**
+   * 
+   * @param { EnhancedDomainEvent } event 
+   * @returns
+   */
   handle(event: EnhancedDomainEvent) {
     if (this.eventIds.includes(event.version)) {
       // abort if event has already been processed

@@ -1,9 +1,14 @@
+import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
+
   // protects all routes with a jwt token
   // In a real app better implemented in an API gateway which provides
   // authentication, authorization, routing, api composition, etc...
